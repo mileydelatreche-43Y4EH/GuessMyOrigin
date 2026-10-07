@@ -24,11 +24,11 @@ const LangContext = createContext<{
 
 export function LangProvider({ children }: { children: React.ReactNode }) {
   const [lang, setLangState] = useState<LangCode>("fr");
-  const [ready, setReady] = useState(false);
 
   useEffect(() => {
-    setLangState(loadLang());
-    setReady(true);
+    const saved = loadLang();
+    setLangState(saved);
+    document.documentElement.lang = saved;
   }, []);
 
   const setLang = useCallback((c: LangCode) => {
@@ -38,15 +38,13 @@ export function LangProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   useEffect(() => {
-    if (ready) document.documentElement.lang = lang;
-  }, [lang, ready]);
+    document.documentElement.lang = lang;
+  }, [lang]);
 
   const value = useMemo(
     () => ({ lang, setLang, t: getDict(lang) }),
     [lang, setLang]
   );
-
-  if (!ready) return null;
 
   return <LangContext.Provider value={value}>{children}</LangContext.Provider>;
 }

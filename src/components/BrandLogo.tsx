@@ -31,7 +31,6 @@ export default function BrandLogo({
       className={`brand-logo brand-logo-${size} ${className}`.trim()}
       draggable={false}
       decoding="async"
-      {...(priority ? { fetchPriority: "high" as const } : {})}
     />
   );
 }

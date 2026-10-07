@@ -52,7 +52,6 @@ export default function GameApp() {
   const [timerLeft, setTimerLeft] = useState(0);
   const [busy, setBusy] = useState(false);
   const [session, setSession] = useState<Session | null>(null);
-  const [authReady, setAuthReady] = useState(false);
   const [soloSettings, setSoloSettings] = useState<GameSettings>({
     ...SOLO_DEFAULT_SETTINGS,
   });
@@ -67,7 +66,6 @@ export default function GameApp() {
       const saved = localStorage.getItem("guessmyorigin_name");
       if (saved) setName(saved);
     }
-    setAuthReady(true);
   }, []);
 
   /* Solo 100 % client */
@@ -410,10 +408,6 @@ export default function GameApp() {
         </div>
       </main>
     );
-  }
-
-  if (!authReady) {
-    return <main className="auth-screen" />;
   }
 
   if (!session) {
