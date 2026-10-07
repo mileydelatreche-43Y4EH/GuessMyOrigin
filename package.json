@@ -3,24 +3,34 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "tsx server.ts",
     "build": "next build",
-    "start": "next start",
+    "start": "tsx server.ts",
     "lint": "next lint"
   },
   "dependencies": {
+    "leaflet": "^1.9.4",
+    "maplibre-gl": "^6.13.0",
+    "next": "14.2.35",
     "react": "^18",
     "react-dom": "^18",
-    "next": "14.2.35"
+    "react-leaflet": "^4.2.1",
+    "socket.io": "^4.8.4",
+    "socket.io-client": "^4.8.4",
+    "uuid": "^14.0.2"
   },
   "devDependencies": {
-    "typescript": "^5",
+    "@types/leaflet": "^1.9.22",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "@types/uuid": "^10.0.0",
+    "concurrently": "^10.0.5",
+    "eslint": "^8",
+    "eslint-config-next": "14.2.35",
     "postcss": "^8",
     "tailwindcss": "^3.4.1",
-    "eslint": "^8",
-    "eslint-config-next": "14.2.35"
+    "tsx": "^4.23.15",
+    "typescript": "^5"
   }
 }
