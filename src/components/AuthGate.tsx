@@ -5,6 +5,7 @@ import { loginSocial, type AuthProvider, type Session } from "@/lib/auth";
 import { useLang } from "./LangContext";
 import LangSwitcher from "./LangSwitcher";
 import AuthCard from "./AuthCard";
+import BrandLogo from "./BrandLogo";
 import LandingFooter from "./LandingFooter";
 
 interface Props {
@@ -64,7 +65,9 @@ export default function AuthGate({ onAuthed }: Props) {
     <main className="landing scroll-landing">
       <header className="landing-nav fixed-nav">
         <div className="landing-nav-left">
-          <div className="logo-mark sm" />
+          <a href="#play" className="nav-brand" aria-label="GuessMyOrigin">
+            <BrandLogo size="sm" priority />
+          </a>
           <nav className="landing-links">
             <a href="#explore">{t.navExplore}</a>
             <a href="#friends">{t.navFriends}</a>

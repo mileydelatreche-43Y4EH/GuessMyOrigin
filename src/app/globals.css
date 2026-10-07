@@ -309,7 +309,7 @@
     padding: 10px 12px;
     gap: 8px;
   }
-  .landing-nav-left .logo-mark.sm {
+  .landing-nav-left .brand-logo-sm {
     width: 24px;
     height: 24px;
   }
@@ -693,37 +693,21 @@
 .footer-wordmark {
   display: flex;
   align-items: center;
-  gap: 1px;
+  gap: 12px;
   margin-bottom: 18px;
+  color: #fff;
+}
+.footer-wordmark-text {
   font-size: clamp(22px, 3vw, 28px);
   font-weight: 900;
   font-style: italic;
-  letter-spacing: 0.02em;
-  color: #fff;
+  letter-spacing: -0.02em;
   text-shadow:
     -1px 0 0 rgba(255, 80, 120, 0.55),
     1px 0 0 rgba(80, 160, 255, 0.45);
 }
-.footer-o-pin {
-  display: inline-block;
-  width: 0.72em;
-  height: 0.72em;
-  margin: 0 0.06em 0.08em;
-  border-radius: 50% 50% 50% 0;
-  background: #fff;
-  transform: rotate(-45deg);
-  position: relative;
-  box-shadow:
-    -1px 0 0 rgba(255, 80, 120, 0.5),
-    1px 0 0 rgba(80, 160, 255, 0.4);
-  flex-shrink: 0;
-}
-.footer-o-dot {
-  position: absolute;
-  inset: 28%;
-  border-radius: 50%;
-  background: #0b1020;
-  transform: rotate(45deg);
+.footer-wordmark .brand-logo {
+  filter: drop-shadow(0 4px 12px rgba(255, 59, 48, 0.35));
 }
 .footer-address {
   margin: 0;
@@ -831,8 +815,10 @@
     gap: 28px;
   }
   .footer-wordmark {
-    font-size: 22px;
     flex-wrap: wrap;
+  }
+  .footer-wordmark-text {
+    font-size: 22px;
   }
 }
 
@@ -1167,31 +1153,40 @@ textarea {
   font-size: 16px !important;
 }
 
-.logo-mark {
-  width: 56px;
-  height: 56px;
-  margin: 0 auto;
-  border-radius: 22px;
-  background: linear-gradient(145deg, #ff5a4f, var(--red));
-  box-shadow: 0 10px 24px var(--red-glow);
-  position: relative;
+/* Logo marque (pin loupe) */
+.brand-logo {
+  display: block;
+  object-fit: contain;
+  flex-shrink: 0;
+  user-select: none;
+  filter: drop-shadow(0 4px 10px rgba(255, 59, 48, 0.28));
+  transition: transform 0.18s ease;
 }
-.logo-mark::after {
-  content: "";
-  position: absolute;
-  inset: 14px;
-  border-radius: 50%;
-  border: 3px solid #fff;
+.brand-logo-xs {
+  width: 22px;
+  height: 22px;
 }
-.logo-mark.sm {
+.brand-logo-sm {
   width: 28px;
   height: 28px;
-  border-radius: 12px;
-  margin: 0;
 }
-.logo-mark.sm::after {
-  inset: 7px;
-  border-width: 2px;
+.brand-logo-md {
+  width: 56px;
+  height: 56px;
+}
+.brand-logo-lg {
+  width: 88px;
+  height: 88px;
+  margin: 0 auto;
+}
+.nav-brand {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  flex-shrink: 0;
+}
+.nav-brand:hover .brand-logo {
+  transform: scale(1.06) rotate(-4deg);
 }
 
 .panel {

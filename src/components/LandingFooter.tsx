@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import BrandLogo from "./BrandLogo";
 import { useLang } from "./LangContext";
 
 export default function LandingFooter() {
@@ -30,11 +31,8 @@ export default function LandingFooter() {
       <div className="site-footer-inner">
         <div className="footer-brand">
           <div className="footer-wordmark" aria-label="GuessMyOrigin">
-            <span>GUESSMY</span>
-            <span className="footer-o-pin" aria-hidden>
-              <span className="footer-o-dot" />
-            </span>
-            <span>RIGIN</span>
+            <BrandLogo size="md" />
+            <span className="footer-wordmark-text">GuessMyOrigin</span>
           </div>
           <p className="footer-address">
             Origin Labs SAS

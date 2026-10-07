@@ -3,6 +3,7 @@
 import dynamic from "next/dynamic";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import AuthGate from "./AuthGate";
+import BrandLogo from "./BrandLogo";
 import FaceZoom from "./FaceZoom";
 import { useLang } from "./LangContext";
 import LiveHud from "./LiveHud";
@@ -264,7 +265,7 @@ export default function GameApp() {
         />
         <header className="topbar">
           <div className="brand-inline">
-            <div className="logo-mark sm" />
+            <BrandLogo size="sm" />
             <strong>{t.solo}</strong>
           </div>
         </header>
@@ -434,7 +435,7 @@ export default function GameApp() {
         <div className="blob blob-a" />
         <div className="blob blob-b" />
         <header className="brand">
-          <div className="logo-mark" />
+          <BrandLogo size="lg" priority />
           <h1>{t.tagline}</h1>
           <p className="home-hello">
             {t.hello} {session.name} 👋
@@ -510,7 +511,7 @@ export default function GameApp() {
         />
         <header className="topbar">
           <div className="brand-inline">
-            <div className="logo-mark sm" />
+            <BrandLogo size="sm" />
             <strong>GuessMyOrigin</strong>
           </div>
         </header>
