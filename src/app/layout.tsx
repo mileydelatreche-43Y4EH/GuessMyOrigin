@@ -1,9 +1,17 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Origine — Devine d'où vient le visage",
-  description: "GeoGuessr des origines : clique sur la carte, joue jusqu'à 10 amis.",
+  title: "GuessMyOrigin – Guess where they're from!",
+  description: "GuessMyOrigin – Guess where they're from! Clique sur la carte, joue solo ou jusqu'à 10 amis.",
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  viewportFit: "cover",
+  themeColor: "#1a8f8a",
 };
 
 export default function RootLayout({
@@ -17,7 +25,7 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
         <link
-          href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,600;0,700;0,800;0,900;1,600;1,700;1,800;1,900&display=swap"
           rel="stylesheet"
         />
       </head>

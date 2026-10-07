@@ -18,7 +18,7 @@ interface InternalPlayer {
   score: number;
   isHost: boolean;
   connected: boolean;
-  socketId: string;
+  lastSeen: number;
 }
 
 interface InternalGuess {
@@ -41,22 +41,23 @@ interface Room {
   endsAt: number | null;
   urgencyEndsAt: number | null;
   flashEndsAt: number | null;
-  timers: { round?: ReturnType<typeof setTimeout>; urgency?: ReturnType<typeof setTimeout> };
+  /** Fin de l'écran résultats (5s) avant prochaine manche */
+  resultEndsAt: number | null;
 }
 
-const rooms = new Map<string, Room>();
+type GlobalRooms = { __gmo_rooms?: Map<string, Room> };
+
+function getRooms(): Map<string, Room> {
+  const g = globalThis as unknown as GlobalRooms;
+  if (!g.__gmo_rooms) g.__gmo_rooms = new Map();
+  return g.__gmo_rooms;
+}
 
 function code4(): string {
   const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
   let s = "";
   for (let i = 0; i < 4; i++) s += chars[Math.floor(Math.random() * chars.length)];
   return s;
-}
-
-function clearTimers(room: Room) {
-  if (room.timers.round) clearTimeout(room.timers.round);
-  if (room.timers.urgency) clearTimeout(room.timers.urgency);
-  room.timers = {};
 }
 
 function guessResults(room: Room): GuessResult[] {
@@ -78,6 +79,7 @@ function guessResults(room: Room): GuessResult[] {
 }
 
 function publicPlayers(room: Room): PlayerPublic[] {
+  const now = Date.now();
   return [...room.players.values()]
     .map((p) => ({
       id: p.id,
@@ -86,14 +88,49 @@ function publicPlayers(room: Room): PlayerPublic[] {
       score: p.score,
       hasGuessed: room.guesses.has(p.id),
       isHost: p.isHost,
-      connected: p.connected,
+      connected: p.connected && now - p.lastSeen < 20_000,
     }))
     .sort((a, b) => b.score - a.score || a.name.localeCompare(b.name));
 }
 
+/** Avance les phases selon les deadlines (compatible serverless / Vercel). */
+export function tickRoom(room: Room): void {
+  const now = Date.now();
+
+  if (room.phase === "playing") {
+    const deadline = room.urgencyEndsAt ?? room.endsAt;
+    if (deadline != null && now >= deadline) {
+      finishRound(room);
+    }
+  } else if (room.phase === "roundResult") {
+    if (room.resultEndsAt != null && now >= room.resultEndsAt) {
+      room.roundIndex += 1;
+      room.resultEndsAt = null;
+      if (room.roundIndex >= room.settings.rounds) {
+        room.phase = "finished";
+        room.endsAt = null;
+        room.urgencyEndsAt = null;
+        room.flashEndsAt = null;
+        return;
+      }
+      beginRound(room);
+    }
+  }
+}
+
 export function getRoomState(code: string, viewerId?: string): RoomState | null {
-  const room = rooms.get(code.toUpperCase());
+  const room = getRooms().get(code.toUpperCase());
   if (!room) return null;
+
+  tickRoom(room);
+
+  if (viewerId) {
+    const p = room.players.get(viewerId);
+    if (p) {
+      p.lastSeen = Date.now();
+      p.connected = true;
+    }
+  }
 
   const revealed = room.phase === "roundResult" || room.phase === "finished";
   const person = room.currentPerson;
@@ -192,9 +229,9 @@ function applySettingsPatch(room: Room, patch: Partial<GameSettings>) {
 export function createRoom(
   hostId: string,
   hostName: string,
-  socketId: string,
   opts?: { solo?: boolean }
 ): RoomState {
+  const rooms = getRooms();
   let code = code4();
   while (rooms.has(code)) code = code4();
 
@@ -210,7 +247,7 @@ export function createRoom(
     endsAt: null,
     urgencyEndsAt: null,
     flashEndsAt: null,
-    timers: {},
+    resultEndsAt: null,
   };
 
   room.players.set(hostId, {
@@ -220,7 +257,7 @@ export function createRoom(
     score: 0,
     isHost: true,
     connected: true,
-    socketId,
+    lastSeen: Date.now(),
   });
 
   rooms.set(code, room);
@@ -230,19 +267,20 @@ export function createRoom(
 export function joinRoom(
   code: string,
   playerId: string,
-  name: string,
-  socketId: string
+  name: string
 ): { ok: true; state: RoomState } | { ok: false; error: string } {
-  const room = rooms.get(code.toUpperCase());
-  if (!room) return { ok: false, error: "Salon introuvable" };
-  if (room.settings.solo) return { ok: false, error: "Partie solo — impossible de rejoindre" };
-  if (room.phase !== "lobby") return { ok: false, error: "Partie déjà commencée" };
-  if (room.players.size >= 10) return { ok: false, error: "Salon plein (max 10)" };
+  const room = getRooms().get(code.toUpperCase());
+  if (!room) return { ok: false, error: "ROOM_NOT_FOUND" };
+  tickRoom(room);
+  if (room.settings.solo) return { ok: false, error: "SOLO_NO_JOIN" };
+  if (room.phase !== "lobby") return { ok: false, error: "ALREADY_STARTED" };
+  if (room.players.size >= 10) return { ok: false, error: "ROOM_FULL" };
 
   if (room.players.has(playerId)) {
     const p = room.players.get(playerId)!;
     p.connected = true;
-    p.socketId = socketId;
+    p.lastSeen = Date.now();
+    p.name = name.trim().slice(0, 16) || p.name;
     return { ok: true, state: getRoomState(room.code, playerId)! };
   }
 
@@ -256,7 +294,7 @@ export function joinRoom(
     score: 0,
     isHost: false,
     connected: true,
-    socketId,
+    lastSeen: Date.now(),
   });
 
   return { ok: true, state: getRoomState(room.code, playerId)! };
@@ -267,29 +305,24 @@ export function updateSettings(
   playerId: string,
   patch: Partial<GameSettings>
 ): { ok: true; state: RoomState } | { ok: false; error: string } {
-  const room = rooms.get(code.toUpperCase());
-  if (!room) return { ok: false, error: "Salon introuvable" };
+  const room = getRooms().get(code.toUpperCase());
+  if (!room) return { ok: false, error: "ROOM_NOT_FOUND" };
+  tickRoom(room);
   const player = room.players.get(playerId);
-  if (!player?.isHost) return { ok: false, error: "Seul l'hôte peut changer les réglages" };
-  if (room.phase !== "lobby") return { ok: false, error: "Trop tard" };
+  if (!player?.isHost) return { ok: false, error: "HOST_ONLY_SETTINGS" };
+  if (room.phase !== "lobby") return { ok: false, error: "TOO_LATE" };
 
   applySettingsPatch(room, patch);
   return { ok: true, state: getRoomState(room.code, playerId)! };
 }
 
-type Broadcast = (code: string) => void;
-
-/** Crée une partie solo et la lance tout de suite */
 export function startSolo(
   hostId: string,
   hostName: string,
-  socketId: string,
-  settingsPatch: Partial<GameSettings>,
-  broadcast: Broadcast,
-  onRoundEnd: (code: string) => void
+  settingsPatch: Partial<GameSettings>
 ): { ok: true; state: RoomState } | { ok: false; error: string } {
-  const state = createRoom(hostId, hostName, socketId, { solo: true });
-  const room = rooms.get(state.code)!;
+  const state = createRoom(hostId, hostName, { solo: true });
+  const room = getRooms().get(state.code)!;
   applySettingsPatch(room, settingsPatch);
   room.settings.solo = true;
   if (settingsPatch.timePerRound == null) {
@@ -298,28 +331,27 @@ export function startSolo(
   for (const p of room.players.values()) p.score = 0;
   room.deck = pickRoundPeople(room.settings.rounds);
   room.roundIndex = 0;
-  beginRound(room, broadcast, onRoundEnd);
+  beginRound(room);
   return { ok: true, state: getRoomState(room.code, hostId)! };
 }
 
 export function startGame(
   code: string,
-  playerId: string,
-  broadcast: Broadcast,
-  onRoundEnd: (code: string) => void
+  playerId: string
 ): { ok: true; state: RoomState } | { ok: false; error: string } {
-  const room = rooms.get(code.toUpperCase());
-  if (!room) return { ok: false, error: "Salon introuvable" };
+  const room = getRooms().get(code.toUpperCase());
+  if (!room) return { ok: false, error: "ROOM_NOT_FOUND" };
+  tickRoom(room);
   const player = room.players.get(playerId);
-  if (!player?.isHost) return { ok: false, error: "Seul l'hôte peut démarrer" };
+  if (!player?.isHost) return { ok: false, error: "HOST_ONLY_START" };
   if (room.phase !== "lobby" && room.phase !== "finished") {
-    return { ok: false, error: "Partie en cours" };
+    return { ok: false, error: "IN_PROGRESS" };
   }
 
   for (const p of room.players.values()) p.score = 0;
   room.deck = pickRoundPeople(room.settings.rounds);
   room.roundIndex = 0;
-  beginRound(room, broadcast, onRoundEnd);
+  beginRound(room);
   return { ok: true, state: getRoomState(room.code, playerId)! };
 }
 
@@ -330,11 +362,11 @@ function pickRoundSeconds(room: Room): number {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-function beginRound(room: Room, broadcast: Broadcast, onRoundEnd: (code: string) => void) {
-  clearTimers(room);
+function beginRound(room: Room) {
   room.phase = "playing";
   room.guesses.clear();
   room.urgencyEndsAt = null;
+  room.resultEndsAt = null;
   room.currentPerson = room.deck[room.roundIndex];
 
   const roundSeconds = pickRoundSeconds(room);
@@ -345,50 +377,29 @@ function beginRound(room: Room, broadcast: Broadcast, onRoundEnd: (code: string)
   } else {
     room.flashEndsAt = null;
   }
-
-  room.timers.round = setTimeout(() => {
-    finishRound(room, broadcast, onRoundEnd);
-  }, roundSeconds * 1000);
-
-  broadcast(room.code);
 }
 
-function finishRound(room: Room, broadcast: Broadcast, onRoundEnd: (code: string) => void) {
-  clearTimers(room);
+function finishRound(room: Room) {
   room.urgencyEndsAt = null;
   room.endsAt = null;
   room.flashEndsAt = null;
   room.phase = "roundResult";
-  broadcast(room.code);
-  onRoundEnd(room.code);
-
-  room.timers.round = setTimeout(() => {
-    room.roundIndex += 1;
-    if (room.roundIndex >= room.settings.rounds) {
-      room.phase = "finished";
-      room.currentPerson = room.currentPerson; // keep last for display
-      broadcast(room.code);
-      return;
-    }
-    beginRound(room, broadcast, onRoundEnd);
-  }, 5000);
+  room.resultEndsAt = Date.now() + 5000;
 }
 
 export function submitGuess(
   code: string,
   playerId: string,
   lat: number,
-  lng: number,
-  broadcast: Broadcast,
-  onUrgency: (code: string) => void,
-  onRoundEnd: (code: string) => void
+  lng: number
 ): { ok: true; state: RoomState } | { ok: false; error: string } {
-  const room = rooms.get(code.toUpperCase());
-  if (!room) return { ok: false, error: "Salon introuvable" };
-  if (room.phase !== "playing") return { ok: false, error: "Pas en jeu" };
-  if (!room.currentPerson) return { ok: false, error: "Pas de manche" };
-  if (!room.players.has(playerId)) return { ok: false, error: "Joueur inconnu" };
-  if (room.guesses.has(playerId)) return { ok: false, error: "Déjà deviné" };
+  const room = getRooms().get(code.toUpperCase());
+  if (!room) return { ok: false, error: "ROOM_NOT_FOUND" };
+  tickRoom(room);
+  if (room.phase !== "playing") return { ok: false, error: "NOT_PLAYING" };
+  if (!room.currentPerson) return { ok: false, error: "NO_ROUND" };
+  if (!room.players.has(playerId)) return { ok: false, error: "UNKNOWN_PLAYER" };
+  if (room.guesses.has(playerId)) return { ok: false, error: "ALREADY_GUESSED" };
 
   const person = room.currentPerson;
   const distanceKm = haversineKm(lat, lng, person.lat, person.lng);
@@ -397,55 +408,21 @@ export function submitGuess(
   room.guesses.set(playerId, { playerId, lat, lng, distanceKm, points });
   const player = room.players.get(playerId)!;
   player.score += points;
+  player.lastSeen = Date.now();
 
-  const connected = [...room.players.values()].filter((p) => p.connected);
-  const allGuessed = connected.every((p) => room.guesses.has(p.id));
+  const active = [...room.players.values()].filter(
+    (p) => p.connected && Date.now() - p.lastSeen < 20_000
+  );
+  const allGuessed =
+    active.length > 0 && active.every((p) => room.guesses.has(p.id));
 
   if (room.guesses.size === 1 && !allGuessed) {
     room.urgencyEndsAt = Date.now() + room.settings.urgencySeconds * 1000;
-    if (room.timers.round) clearTimeout(room.timers.round);
-    room.timers.urgency = setTimeout(() => {
-      finishRound(room, broadcast, onRoundEnd);
-    }, room.settings.urgencySeconds * 1000);
-    onUrgency(room.code);
   }
 
   if (allGuessed) {
-    finishRound(room, broadcast, onRoundEnd);
-  } else {
-    broadcast(room.code);
+    finishRound(room);
   }
 
   return { ok: true, state: getRoomState(room.code, playerId)! };
-}
-
-export function disconnectPlayer(socketId: string, broadcast: Broadcast) {
-  for (const room of rooms.values()) {
-    for (const p of room.players.values()) {
-      if (p.socketId === socketId) {
-        p.connected = false;
-        broadcast(room.code);
-        return;
-      }
-    }
-  }
-}
-
-export function findPlayerBySocket(socketId: string): { code: string; playerId: string } | null {
-  for (const room of rooms.values()) {
-    for (const p of room.players.values()) {
-      if (p.socketId === socketId) return { code: room.code, playerId: p.id };
-    }
-  }
-  return null;
-}
-
-export function rebindSocket(code: string, playerId: string, socketId: string): RoomState | null {
-  const room = rooms.get(code.toUpperCase());
-  if (!room) return null;
-  const p = room.players.get(playerId);
-  if (!p) return null;
-  p.socketId = socketId;
-  p.connected = true;
-  return getRoomState(room.code, playerId);
 }

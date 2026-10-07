@@ -1,15 +1,34 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import AuthGate from "./AuthGate";
 import FaceZoom from "./FaceZoom";
+import { useLang } from "./LangContext";
 import LiveHud from "./LiveHud";
+import TopBar from "./TopBar";
 import UrgencyBanner from "./UrgencyBanner";
+import { clearSession, getSession, type Session } from "@/lib/auth";
 import { formatDistance } from "@/lib/geo";
-import { getOrCreatePlayerId, getSocket } from "@/lib/socket";
-import { playGuessConfirm } from "@/lib/sound";
 import {
-  MODE_LABELS,
+  apiCreate,
+  apiGuess,
+  apiJoin,
+  apiSettings,
+  apiStart,
+  apiState,
+  getOrCreatePlayerId,
+} from "@/lib/api";
+import {
+  createSoloEngine,
+  guessSolo,
+  soloToRoomState,
+  tickSolo,
+  type SoloEngine,
+} from "@/lib/soloClient";
+import { playGuessConfirm } from "@/lib/sound";
+import { modeLabels, translateError } from "@/lib/i18n";
+import {
   SOLO_DEFAULT_SETTINGS,
   type GameMode,
   type GameSettings,
@@ -21,6 +40,7 @@ const MapPick = dynamic(() => import("./MapPick"), { ssr: false });
 type Screen = "home" | "soloSetup" | "room";
 
 export default function GameApp() {
+  const { t, lang } = useLang();
   const [screen, setScreen] = useState<Screen>("home");
   const [name, setName] = useState("");
   const [joinCode, setJoinCode] = useState("");
@@ -30,28 +50,68 @@ export default function GameApp() {
   const [pick, setPick] = useState<{ lat: number; lng: number } | null>(null);
   const [timerLeft, setTimerLeft] = useState(0);
   const [busy, setBusy] = useState(false);
+  const [session, setSession] = useState<Session | null>(null);
+  const [authReady, setAuthReady] = useState(false);
   const [soloSettings, setSoloSettings] = useState<GameSettings>({
     ...SOLO_DEFAULT_SETTINGS,
   });
+  const soloRef = useRef<SoloEngine | null>(null);
 
   useEffect(() => {
     setPlayerId(getOrCreatePlayerId());
-    const saved = localStorage.getItem("origine_name");
-    if (saved) setName(saved);
+    const s = getSession();
+    setSession(s);
+    if (s?.name) setName(s.name);
+    else {
+      const saved = localStorage.getItem("guessmyorigin_name");
+      if (saved) setName(saved);
+    }
+    setAuthReady(true);
   }, []);
 
+  /* Solo 100 % client */
   useEffect(() => {
-    const socket = getSocket();
-    const onState = (s: RoomState) => {
+    if (!state?.settings.solo || screen !== "room" || !soloRef.current) return;
+    let lastRound = soloRef.current.roundIndex;
+    const id = setInterval(() => {
+      if (!soloRef.current) return;
+      const next = tickSolo(soloRef.current);
+      if (next.roundIndex !== lastRound && next.phase === "playing") {
+        setPick(null);
+        lastRound = next.roundIndex;
+      }
+      soloRef.current = next;
+      setState(soloToRoomState(next));
+    }, 250);
+    return () => clearInterval(id);
+  }, [state?.settings.solo, state?.code, screen]);
+
+  /* Multi : polling HTTP Vercel */
+  useEffect(() => {
+    if (!state?.code || !playerId || screen !== "room") return;
+    if (state.settings.solo || state.code === "SOLO") return;
+    const code = state.code;
+    let cancelled = false;
+    let lastRound = -1;
+
+    const poll = async () => {
+      const res = await apiState(code, playerId);
+      if (cancelled || !res.ok || !res.state) return;
+      const s = res.state;
+      const ri = s.round?.index ?? -1;
+      if (s.phase === "playing" && ri !== lastRound) {
+        setPick(null);
+        lastRound = ri;
+      }
       setState(s);
-      setScreen("room");
-      if (s.phase === "playing" && !s.you?.hasGuessed) setPick(null);
     };
-    socket.on("state", onState);
+
+    const id = setInterval(poll, 700);
     return () => {
-      socket.off("state", onState);
+      cancelled = true;
+      clearInterval(id);
     };
-  }, []);
+  }, [state?.code, state?.settings.solo, playerId, screen]);
 
   useEffect(() => {
     if (!state?.round?.endsAt || state.phase !== "playing") {
@@ -91,157 +151,148 @@ export default function GameApp() {
   const urgencyEndsAt = duelUrgency
     ? state?.round?.urgencyEndsAt ?? null
     : state?.round?.endsAt ?? null;
-  const urgencyLabel = duelUrgency ? "Quelqu'un a guess !" : "Plus que…";
+  const urgencyLabel = duelUrgency ? t.someoneGuessed : t.timeLeft;
 
-  const create = () => {
+  const create = async () => {
     setError("");
     if (!name.trim()) {
-      setError("Entre un prénom");
+      setError(t.errName);
       return;
     }
-    localStorage.setItem("origine_name", name.trim());
+    localStorage.setItem("guessmyorigin_name", name.trim());
     setBusy(true);
-    getSocket().emit(
-      "create",
-      { playerId, name: name.trim() },
-      (res: { ok: boolean; state?: RoomState; error?: string }) => {
-        setBusy(false);
-        if (!res.ok) {
-          setError(res.error || "Erreur");
-          return;
-        }
-        setState(res.state!);
-        setScreen("room");
-      }
-    );
+    const res = await apiCreate(playerId, name.trim());
+    setBusy(false);
+    if (!res.ok || !res.state) {
+      setError(translateError(lang, res.error));
+      return;
+    }
+    setState(res.state);
+    setScreen("room");
   };
 
-  const join = () => {
+  const join = async () => {
     setError("");
     if (!name.trim()) {
-      setError("Entre un prénom");
+      setError(t.errName);
       return;
     }
     if (joinCode.trim().length < 4) {
-      setError("Code à 4 lettres");
+      setError(t.errCode);
       return;
     }
-    localStorage.setItem("origine_name", name.trim());
+    localStorage.setItem("guessmyorigin_name", name.trim());
     setBusy(true);
-    getSocket().emit(
-      "join",
-      { code: joinCode.trim().toUpperCase(), playerId, name: name.trim() },
-      (res: { ok: boolean; state?: RoomState; error?: string }) => {
-        setBusy(false);
-        if (!res.ok) {
-          setError(res.error || "Erreur");
-          return;
-        }
-        setState(res.state!);
-        setScreen("room");
-      }
-    );
+    const res = await apiJoin(joinCode.trim().toUpperCase(), playerId, name.trim());
+    setBusy(false);
+    if (!res.ok || !res.state) {
+      setError(translateError(lang, res.error));
+      return;
+    }
+    setState(res.state);
+    setScreen("room");
   };
 
-  const patchSettings = (patch: Partial<RoomState["settings"]>) => {
+  const patchSettings = async (patch: Partial<RoomState["settings"]>) => {
     if (!state || !me?.isHost) return;
-    getSocket().emit("settings", {
-      code: state.code,
-      playerId,
-      settings: patch,
-    });
+    const res = await apiSettings(state.code, playerId, patch);
+    if (res.ok && res.state) setState(res.state);
   };
 
-  const start = () => {
+  const start = async () => {
     if (!state) return;
-    getSocket().emit("start", { code: state.code, playerId });
+    if (state.settings.solo) {
+      const engine = createSoloEngine(playerId, name.trim() || state.players[0]?.name || "Solo", {
+        ...state.settings,
+        solo: true,
+      });
+      soloRef.current = engine;
+      setPick(null);
+      setState(soloToRoomState(engine));
+      return;
+    }
+    const res = await apiStart(state.code, playerId);
+    if (res.ok && res.state) setState(res.state);
+    else if (!res.ok) setError(translateError(lang, res.error));
   };
 
   const launchSolo = () => {
     setError("");
     if (!name.trim()) {
-      setError("Entre un prénom");
+      setError(t.errName);
       return;
     }
-    localStorage.setItem("origine_name", name.trim());
-    setBusy(true);
-    getSocket().emit(
-      "soloStart",
-      {
-        playerId,
-        name: name.trim(),
-        settings: {
-          mode: soloSettings.mode,
-          rounds: soloSettings.rounds,
-          timePerRound: soloSettings.timePerRound,
-          flashSeconds: soloSettings.flashSeconds,
-          randomTimeMin: soloSettings.randomTimeMin,
-          randomTimeMax: soloSettings.randomTimeMax,
-          soloUrgencyAt: 5,
-        },
-      },
-      (res: { ok: boolean; state?: RoomState; error?: string }) => {
-        setBusy(false);
-        if (!res.ok) {
-          setError(res.error || "Erreur");
-          return;
-        }
-        setState(res.state!);
-        setScreen("room");
-      }
-    );
+    localStorage.setItem("guessmyorigin_name", name.trim());
+    const engine = createSoloEngine(playerId, name.trim(), {
+      ...soloSettings,
+      solo: true,
+      soloUrgencyAt: 5,
+    });
+    soloRef.current = engine;
+    setPick(null);
+    setState(soloToRoomState(engine));
+    setScreen("room");
   };
 
-  const confirmGuess = useCallback(() => {
+  const confirmGuess = useCallback(async () => {
     if (!state || !pick || state.you?.hasGuessed) return;
     playGuessConfirm();
-    getSocket().emit("guess", {
-      code: state.code,
-      playerId,
-      lat: pick.lat,
-      lng: pick.lng,
-    });
+    if (state.settings.solo && soloRef.current) {
+      const next = guessSolo(soloRef.current, pick.lat, pick.lng);
+      soloRef.current = next;
+      setState(soloToRoomState(next));
+      return;
+    }
+    const res = await apiGuess(state.code, playerId, pick.lat, pick.lng);
+    if (res.ok && res.state) setState(res.state);
   }, [state, pick, playerId]);
 
   if (screen === "soloSetup") {
     return (
       <main className="shell lobby">
+        <TopBar
+          rightSlot={
+            <button
+              type="button"
+              className="btn secondary"
+              style={{ padding: "8px 14px" }}
+              onClick={() => setScreen("home")}
+            >
+              {t.return}
+            </button>
+          }
+        />
         <header className="topbar">
           <div className="brand-inline">
             <div className="logo-mark sm" />
-            <strong>Solo</strong>
+            <strong>{t.solo}</strong>
           </div>
-          <button
-            type="button"
-            className="btn secondary"
-            style={{ padding: "8px 14px" }}
-            onClick={() => setScreen("home")}
-          >
-            Retour
-          </button>
         </header>
 
         <div className="lobby-grid" style={{ maxWidth: 520 }}>
           <section className="panel" style={{ gridColumn: "1 / -1" }}>
-            <h2>Difficulté</h2>
+            <h2>{t.difficulty}</h2>
             <div className="mode-grid">
-              {(Object.keys(MODE_LABELS) as GameMode[]).map((mode) => (
+              {(["standard", "hardcore", "random"] as GameMode[]).map((mode) => {
+                const label = modeLabels(t, mode);
+                return (
                 <button
                   key={mode}
                   type="button"
                   className={`mode-card ${soloSettings.mode === mode ? "active" : ""}`}
                   onClick={() => setSoloSettings((s) => ({ ...s, mode }))}
                 >
-                  <strong>{MODE_LABELS[mode].title}</strong>
-                  <span>{MODE_LABELS[mode].desc}</span>
+                  <strong>{label.title}</strong>
+                  <span>{label.desc}</span>
                 </button>
-              ))}
+              );
+              })}
             </div>
 
             {soloSettings.mode === "hardcore" && (
               <label className="slider-field">
                 <div className="slider-head">
-                  <span>Durée du flash</span>
+                  <span>{t.flashDuration}</span>
                   <strong>{soloSettings.flashSeconds.toFixed(1)}s</strong>
                 </div>
                 <input
@@ -264,7 +315,7 @@ export default function GameApp() {
               <>
                 <label className="slider-field">
                   <div className="slider-head">
-                    <span>Temps min</span>
+                    <span>{t.timeMin}</span>
                     <strong>{soloSettings.randomTimeMin}s</strong>
                   </div>
                   <input
@@ -282,7 +333,7 @@ export default function GameApp() {
                 </label>
                 <label className="slider-field">
                   <div className="slider-head">
-                    <span>Temps max</span>
+                    <span>{t.timeMax}</span>
                     <strong>{soloSettings.randomTimeMax}s</strong>
                   </div>
                   <input
@@ -302,10 +353,10 @@ export default function GameApp() {
               </>
             )}
 
-            <h2 className="settings-sub">Réglages</h2>
+            <h2 className="settings-sub">{t.settings}</h2>
             <label className="slider-field">
               <div className="slider-head">
-                <span>Manches</span>
+                <span>{t.rounds}</span>
                 <strong>{soloSettings.rounds}</strong>
               </div>
               <input
@@ -325,7 +376,7 @@ export default function GameApp() {
             {soloSettings.mode !== "random" && (
               <label className="slider-field">
                 <div className="slider-head">
-                  <span>Temps pour guess</span>
+                  <span>{t.timeGuess}</span>
                   <strong>{soloSettings.timePerRound}s</strong>
                 </div>
                 <input
@@ -344,18 +395,14 @@ export default function GameApp() {
               </label>
             )}
 
-            <p className="solo-hint">
-              Valide avant la fin pour scorer tout de suite. Les{" "}
-              <strong>5 dernières secondes</strong> : animation rouge comme en
-              duel.
-            </p>
+            <p className="solo-hint">{t.soloHint}</p>
 
             <button
               className="btn primary wide"
               onClick={launchSolo}
               disabled={busy}
             >
-              Lancer le solo — {MODE_LABELS[soloSettings.mode].title}
+              {t.launchSolo} — {modeLabels(t, soloSettings.mode).title}
             </button>
             {error && <p className="error">{error}</p>}
           </section>
@@ -364,55 +411,59 @@ export default function GameApp() {
     );
   }
 
+  if (!authReady) {
+    return <main className="auth-screen" />;
+  }
+
+  if (!session) {
+    return (
+      <AuthGate
+        onAuthed={(s, pendingCode) => {
+          setSession(s);
+          setName(s.name);
+          if (pendingCode) setJoinCode(pendingCode);
+        }}
+      />
+    );
+  }
+
   if (screen === "home" || !state) {
     return (
       <main className="shell home">
+        <TopBar />
         <div className="blob blob-a" />
         <div className="blob blob-b" />
         <header className="brand">
           <div className="logo-mark" />
-          <h1>Origine</h1>
-          <p>Devine d&apos;où vient le visage. Clique sur la carte.</p>
+          <h1>{t.tagline}</h1>
+          <p className="home-hello">
+            {t.hello} {session.name} 👋
+          </p>
         </header>
 
         <div className="panel home-panel">
-          <label className="field">
-            <span>Ton prénom</span>
-            <input
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              maxLength={16}
-              placeholder="Ex: Mila"
-            />
-          </label>
-
           <button
             className="btn primary"
             onClick={() => {
               setError("");
-              if (!name.trim()) {
-                setError("Entre un prénom");
-                return;
-              }
-              localStorage.setItem("origine_name", name.trim());
               setSoloSettings({ ...SOLO_DEFAULT_SETTINGS });
               setScreen("soloSetup");
             }}
             disabled={busy}
           >
-            Jouer solo
+            {t.playSolo}
           </button>
 
           <button className="btn secondary" onClick={create} disabled={busy}>
-            Créer une session (amis)
+            {t.createSession}
           </button>
 
           <div className="divider">
-            <span>ou rejoindre</span>
+            <span>{t.orJoin}</span>
           </div>
 
           <label className="field">
-            <span>Code</span>
+            <span>{t.code}</span>
             <input
               value={joinCode}
               onChange={(e) => setJoinCode(e.target.value.toUpperCase())}
@@ -422,7 +473,20 @@ export default function GameApp() {
             />
           </label>
           <button className="btn secondary" onClick={join} disabled={busy}>
-            Rejoindre
+            {t.join}
+          </button>
+
+          <button
+            type="button"
+            className="btn secondary"
+            onClick={() => {
+              clearSession();
+              setSession(null);
+              setState(null);
+              setScreen("home");
+            }}
+          >
+            {t.logout}
           </button>
 
           {error && <p className="error">{error}</p>}
@@ -435,36 +499,42 @@ export default function GameApp() {
   if (state.phase === "lobby") {
     return (
       <main className="shell lobby">
+        <TopBar
+          rightSlot={
+            !state.settings.solo ? (
+              <div className="code-pill">
+                {t.code} <span>{state.code}</span>
+              </div>
+            ) : undefined
+          }
+        />
         <header className="topbar">
           <div className="brand-inline">
             <div className="logo-mark sm" />
-            <strong>Origine</strong>
+            <strong>GuessMyOrigin</strong>
           </div>
-          {!state.settings.solo && (
-            <div className="code-pill">
-              Code <span>{state.code}</span>
-            </div>
-          )}
         </header>
 
         <div className="lobby-grid">
           <section className="panel">
-            <h2>Joueurs ({state.players.length}/10)</h2>
+            <h2>{t.players} ({state.players.length}/10)</h2>
             <ul className="player-list">
               {state.players.map((p) => (
                 <li key={p.id}>
                   <span className="dot" style={{ background: p.color }} />
                   <span>{p.name}</span>
-                  {p.isHost && <em className="tag">hôte</em>}
+                  {p.isHost && <em className="tag">{t.host}</em>}
                 </li>
               ))}
             </ul>
           </section>
 
           <section className="panel">
-            <h2>Mode de jeu</h2>
+            <h2>{t.gameMode}</h2>
             <div className="mode-grid">
-              {(Object.keys(MODE_LABELS) as GameMode[]).map((mode) => (
+              {(["standard", "hardcore", "random"] as GameMode[]).map((mode) => {
+                const label = modeLabels(t, mode);
+                return (
                 <button
                   key={mode}
                   type="button"
@@ -472,16 +542,17 @@ export default function GameApp() {
                   disabled={!me?.isHost}
                   onClick={() => patchSettings({ mode })}
                 >
-                  <strong>{MODE_LABELS[mode].title}</strong>
-                  <span>{MODE_LABELS[mode].desc}</span>
+                  <strong>{label.title}</strong>
+                  <span>{label.desc}</span>
                 </button>
-              ))}
+              );
+              })}
             </div>
 
             {state.settings.mode === "hardcore" && (
               <label className="slider-field">
                 <div className="slider-head">
-                  <span>Durée du flash</span>
+                  <span>{t.flashDuration}</span>
                   <strong>{state.settings.flashSeconds.toFixed(1)}s</strong>
                 </div>
                 <input
@@ -502,7 +573,7 @@ export default function GameApp() {
               <>
                 <label className="slider-field">
                   <div className="slider-head">
-                    <span>Temps min (random)</span>
+                    <span>{t.timeMin}</span>
                     <strong>{state.settings.randomTimeMin}s</strong>
                   </div>
                   <input
@@ -519,7 +590,7 @@ export default function GameApp() {
                 </label>
                 <label className="slider-field">
                   <div className="slider-head">
-                    <span>Temps max (random)</span>
+                    <span>{t.timeMax}</span>
                     <strong>{state.settings.randomTimeMax}s</strong>
                   </div>
                   <input
@@ -537,10 +608,10 @@ export default function GameApp() {
               </>
             )}
 
-            <h2 className="settings-sub">Réglages</h2>
+            <h2 className="settings-sub">{t.settings}</h2>
             <label className="slider-field">
               <div className="slider-head">
-                <span>Manches</span>
+                <span>{t.rounds}</span>
                 <strong>{state.settings.rounds}</strong>
               </div>
               <input
@@ -555,7 +626,7 @@ export default function GameApp() {
             {state.settings.mode !== "random" && (
               <label className="slider-field">
                 <div className="slider-head">
-                  <span>Temps / manche</span>
+                  <span>{t.timeGuess}</span>
                   <strong>{state.settings.timePerRound}s</strong>
                 </div>
                 <input
@@ -573,7 +644,7 @@ export default function GameApp() {
             )}
             <label className="slider-field">
               <div className="slider-head">
-                <span>Urgence après 1er guess</span>
+                <span>{t.urgency}</span>
                 <strong>{state.settings.urgencySeconds}s</strong>
               </div>
               <input
@@ -590,10 +661,10 @@ export default function GameApp() {
 
             {me?.isHost ? (
               <button className="btn primary wide" onClick={start}>
-                Lancer — {MODE_LABELS[state.settings.mode].title}
+                {t.startGame} — {modeLabels(t, state.settings.mode).title}
               </button>
             ) : (
-              <p className="muted">En attente de l&apos;hôte…</p>
+              <p className="muted">{t.waitingHost}</p>
             )}
           </section>
         </div>
@@ -607,7 +678,7 @@ export default function GameApp() {
     return (
       <main className="shell finished">
         <div className="panel finish-panel">
-          <h1>Fin de partie</h1>
+          <h1>{t.gameOver}</h1>
           <ol className="final-rank">
             {ranked.map((p, i) => (
               <li key={p.id} className={i === 0 ? "winner" : ""}>
@@ -620,7 +691,7 @@ export default function GameApp() {
           </ol>
           {me?.isHost && (
             <button className="btn primary wide" onClick={start}>
-              Rejouer
+              {t.playAgain}
             </button>
           )}
         </div>
@@ -663,7 +734,7 @@ export default function GameApp() {
       <div className="game-main">
         <header className="game-top">
           <div className="round-pill">
-            Manche {round.index + 1}/{round.total}
+            {t.round} {round.index + 1}/{round.total}
           </div>
           {state.phase === "playing" && (
             <div className={`timer-pill ${urgencyActive ? "hot" : ""}`}>
@@ -673,22 +744,22 @@ export default function GameApp() {
           {state.you?.hasGuessed &&
             state.phase === "playing" &&
             !state.settings.solo && (
-              <div className="waiting-pill">En attente des autres…</div>
+              <div className="waiting-pill">{t.waitingOthers}</div>
             )}
         </header>
 
         {state.you?.lastGuess && (state.you.hasGuessed || revealed) && (
           <div className="instant-score">
             <div>
-              <span>Distance</span>
+              <span>{t.distance}</span>
               <b>{formatDistance(state.you.lastGuess.distanceKm)}</b>
             </div>
             <div>
-              <span>Points</span>
+              <span>{t.points}</span>
               <b className="red">+{state.you.lastGuess.points}</b>
             </div>
             <div>
-              <span>Total</span>
+              <span>{t.total}</span>
               <b>{me?.score ?? 0}</b>
             </div>
           </div>
@@ -717,14 +788,14 @@ export default function GameApp() {
               disabled={!pick}
               onClick={confirmGuess}
             >
-              Valider mon point
+              {t.validate}
             </button>
           </div>
         )}
 
         {revealed && (
           <div className="round-results">
-            <p>Prochaine manche dans un instant…</p>
+            <p>{t.nextRound}</p>
             <ul>
               {round.guesses.map((g) => (
                 <li key={g.playerId}>

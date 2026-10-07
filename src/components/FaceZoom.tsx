@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { GameMode } from "@/lib/types";
+import { useLang } from "./LangContext";
 
 interface Props {
   src: string;
@@ -26,6 +27,7 @@ export default function FaceZoom({
   const [flashing, setFlashing] = useState(false);
   const [flashGone, setFlashGone] = useState(false);
   const [flashLeft, setFlashLeft] = useState(0);
+  const { t } = useLang();
   const drag = useRef<{ x: number; y: number; ox: number; oy: number } | null>(
     null
   );
@@ -127,9 +129,9 @@ export default function FaceZoom({
         <div className="hardcore-flash" aria-live="polite">
           <div className="hardcore-flash-inner">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={src} alt="Mémorise ce visage" draggable={false} />
+            <img src={src} alt={t.memorizeFace} draggable={false} />
             <div className="hardcore-flash-meta">
-              <span className="hardcore-tag">HARDCORE</span>
+              <span className="hardcore-tag">{t.modeHardcore.toUpperCase()}</span>
               <span className="hardcore-timer">
                 {(flashLeft / 1000).toFixed(1)}s
               </span>
@@ -142,7 +144,7 @@ export default function FaceZoom({
       {mode === "hardcore" && flashGone && !forceShow && (
         <div className="face-dock face-dock-gone" aria-hidden>
           <span className="face-gone-mark">?</span>
-          <span className="face-dock-hint dim">Flash terminé</span>
+          <span className="face-dock-hint dim">{t.flashDone}</span>
         </div>
       )}
 
@@ -151,12 +153,12 @@ export default function FaceZoom({
           type="button"
           className="face-dock"
           onClick={() => canOpen && setOpen(true)}
-          aria-label="Agrandir la photo"
+          aria-label={t.enlargePhoto}
         >
           <span className="face-dock-frame">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={src} alt="Visage à placer" draggable={false} />
-            <span className="face-dock-hint">Agrandir</span>
+            <img src={src} alt={t.faceAlt} draggable={false} />
+            <span className="face-dock-hint">{t.enlarge}</span>
           </span>
           {caption && <span className="face-dock-cap">{caption}</span>}
         </button>
@@ -166,14 +168,14 @@ export default function FaceZoom({
         <div className="face-lightbox" role="dialog" aria-modal="true">
           <div className="face-lightbox-bar">
             <button type="button" className="lb-btn" onClick={close}>
-              Fermer
+              {t.close}
             </button>
             <div className="lb-zoom-controls">
               <button
                 type="button"
                 className="lb-btn round"
                 onClick={() => setScale((s) => Math.max(1, s - 0.25))}
-                aria-label="Dézoomer"
+                aria-label={t.zoomOut}
               >
                 −
               </button>
@@ -182,12 +184,12 @@ export default function FaceZoom({
                 type="button"
                 className="lb-btn round"
                 onClick={() => setScale((s) => Math.min(5, s + 0.25))}
-                aria-label="Zoomer"
+                aria-label={t.zoomIn}
               >
                 +
               </button>
               <button type="button" className="lb-btn" onClick={resetView}>
-                Reset
+                {t.reset}
               </button>
             </div>
           </div>
@@ -208,7 +210,7 @@ export default function FaceZoom({
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={src}
-              alt="Visage agrandi"
+              alt={t.enlargePhoto}
               draggable={false}
               style={{
                 transform: `translate(${offset.x}px, ${offset.y}px) scale(${scale})`,
@@ -216,9 +218,7 @@ export default function FaceZoom({
             />
           </div>
 
-          <p className="face-lightbox-tip">
-            Molette pour zoomer · glisser pour bouger · double-clic · Échap
-          </p>
+          <p className="face-lightbox-tip">{t.zoomTip}</p>
         </div>
       )}
     </>

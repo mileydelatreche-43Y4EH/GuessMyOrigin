@@ -1,9 +1,12 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import maplibregl, { type Map, type Marker } from "maplibre-gl";
+import * as maplibregl from "maplibre-gl";
 import type { GuessResult } from "@/lib/types";
 import "maplibre-gl/dist/maplibre-gl.css";
+
+type MapInstance = maplibregl.Map;
+type MarkerInstance = maplibregl.Marker;
 
 /** Style vectoriel fluide (proche roadmap Google / GeoGuessr) */
 const MAP_STYLE = "https://tiles.openfreemap.org/styles/liberty";
@@ -39,9 +42,9 @@ export default function MapPick({
   myColor = "#FF3B30",
 }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const mapRef = useRef<Map | null>(null);
-  const pickMarkerRef = useRef<Marker | null>(null);
-  const resultMarkersRef = useRef<Marker[]>([]);
+  const mapRef = useRef<MapInstance | null>(null);
+  const pickMarkerRef = useRef<MarkerInstance | null>(null);
+  const resultMarkersRef = useRef<MarkerInstance[]>([]);
   const canPickRef = useRef(canPick);
   const onPickRef = useRef(onPick);
 
@@ -66,11 +69,9 @@ export default function MapPick({
       pitchWithRotate: false,
       touchPitch: false,
       renderWorldCopies: true,
-      antialias: true,
       fadeDuration: 0,
       refreshExpiredTiles: true,
       trackResize: true,
-      cooperativeGestures: false,
     });
 
     map.addControl(
