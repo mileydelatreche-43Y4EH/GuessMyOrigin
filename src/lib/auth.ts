@@ -65,7 +65,7 @@ export function signupEmail(
 
   const users = readUsers();
   if (users.some((u) => u.email === e)) {
-    return { ok: false, error: "Compte déjà existant — LOG IN" };
+    return { ok: false, error: "Compte déjà existant. LOG IN" };
   }
   users.push({ email: e, password, name: n });
   writeUsers(users);

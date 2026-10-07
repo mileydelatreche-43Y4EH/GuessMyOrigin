@@ -3,16 +3,22 @@
 import type { AuthProvider } from "@/lib/auth";
 import { useLang } from "./LangContext";
 
-type View = "signup" | "login" | "socialName";
+type View = "signup" | "login" | "emailForm";
 
 interface Props {
   view: View;
   setView: (v: View) => void;
   name: string;
   setName: (v: string) => void;
+  email: string;
+  setEmail: (v: string) => void;
+  password: string;
+  setPassword: (v: string) => void;
   error: string;
   startSocial: (p: AuthProvider) => void;
-  confirmSocial: () => void;
+  startEmail: () => void;
+  submitEmail: () => void;
+  emailMode: "signup" | "login";
 }
 
 export default function AuthCard({
@@ -20,35 +26,48 @@ export default function AuthCard({
   setView,
   name,
   setName,
+  email,
+  setEmail,
+  password,
+  setPassword,
   error,
   startSocial,
-  confirmSocial,
+  startEmail,
+  submitEmail,
+  emailMode,
 }: Props) {
   const { t } = useLang();
+
+  const socialButtons = (
+    <div className="auth-stack">
+      <button
+        type="button"
+        className="auth-btn google"
+        onClick={() => startSocial("google")}
+      >
+        <GoogleIcon />
+        <span>{t.continueGoogle}</span>
+      </button>
+      <button
+        type="button"
+        className="auth-btn microsoft"
+        onClick={() => startSocial("microsoft")}
+      >
+        <MicrosoftIcon />
+        <span>{t.continueMicrosoft}</span>
+      </button>
+      <button type="button" className="auth-btn email" onClick={startEmail}>
+        <span>{t.continueEmail}</span>
+      </button>
+    </div>
+  );
 
   return (
     <aside className="auth-modal landing-card sticky-card" id="play">
       {view === "signup" && (
         <>
           <h2>{t.signupTitle}</h2>
-          <div className="auth-stack">
-            <button
-              type="button"
-              className="auth-btn google"
-              onClick={() => startSocial("google")}
-            >
-              <GoogleIcon />
-              <span>{t.continueGoogle}</span>
-            </button>
-            <button
-              type="button"
-              className="auth-btn microsoft"
-              onClick={() => startSocial("microsoft")}
-            >
-              <MicrosoftIcon />
-              <span>{t.continueMicrosoft}</span>
-            </button>
-          </div>
+          {socialButtons}
           <div className="auth-or">
             <span>{t.or}</span>
           </div>
@@ -68,24 +87,7 @@ export default function AuthCard({
       {view === "login" && (
         <>
           <h2>{t.loginTitle}</h2>
-          <div className="auth-stack">
-            <button
-              type="button"
-              className="auth-btn google"
-              onClick={() => startSocial("google")}
-            >
-              <GoogleIcon />
-              <span>{t.continueGoogle}</span>
-            </button>
-            <button
-              type="button"
-              className="auth-btn microsoft"
-              onClick={() => startSocial("microsoft")}
-            >
-              <MicrosoftIcon />
-              <span>{t.continueMicrosoft}</span>
-            </button>
-          </div>
+          {socialButtons}
           <div className="auth-or">
             <span>{t.or}</span>
           </div>
@@ -102,23 +104,48 @@ export default function AuthCard({
         </>
       )}
 
-      {view === "socialName" && (
+      {view === "emailForm" && (
         <>
-          <h2>{t.chooseNick}</h2>
+          <h2>{emailMode === "signup" ? t.signupEmail : t.loginEmail}</h2>
+          {emailMode === "signup" && (
+            <label className="auth-field">
+              <span>{t.nickLabel}</span>
+              <input
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                maxLength={16}
+                placeholder="Ex: Mila"
+                autoFocus
+              />
+            </label>
+          )}
           <label className="auth-field">
-            <span>{t.nickLabel}</span>
+            <span>{t.email}</span>
             <input
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              maxLength={16}
-              placeholder="Ex: Mila"
-              autoFocus
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="you@email.com"
+              autoFocus={emailMode === "login"}
             />
           </label>
-          <button type="button" className="auth-btn primary" onClick={confirmSocial}>
-            {t.continue}
+          <label className="auth-field">
+            <span>{t.password}</span>
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="••••••••"
+            />
+          </label>
+          <button type="button" className="auth-btn primary" onClick={submitEmail}>
+            {emailMode === "signup" ? t.createAccount : t.logIn}
           </button>
-          <button type="button" className="auth-back" onClick={() => setView("signup")}>
+          <button
+            type="button"
+            className="auth-back"
+            onClick={() => setView(emailMode)}
+          >
             {t.back}
           </button>
         </>

@@ -401,7 +401,7 @@ export default function GameApp() {
               onClick={launchSolo}
               disabled={busy}
             >
-              {t.launchSolo} — {modeLabels(t, soloSettings.mode).title}
+              {t.launchSolo}: {modeLabels(t, soloSettings.mode).title}
             </button>
             {error && <p className="error">{error}</p>}
           </section>
@@ -656,7 +656,7 @@ export default function GameApp() {
 
             {me?.isHost ? (
               <button className="btn primary wide" onClick={start}>
-                {t.startGame} — {modeLabels(t, state.settings.mode).title}
+                {t.startGame}: {modeLabels(t, state.settings.mode).title}
               </button>
             ) : (
               <p className="muted">{t.waitingHost}</p>
@@ -795,7 +795,7 @@ export default function GameApp() {
               {round.guesses.map((g) => (
                 <li key={g.playerId}>
                   <span className="dot" style={{ background: g.color }} />
-                  {g.playerName} — {formatDistance(g.distanceKm)} —{" "}
+                  {g.playerName}: {formatDistance(g.distanceKm)},{" "}
                   <b>+{g.points}</b>
                 </li>
               ))}

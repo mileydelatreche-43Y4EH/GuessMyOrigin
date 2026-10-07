@@ -2,8 +2,8 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "GuessMyOrigin – Guess where they're from!",
-  description: "GuessMyOrigin – Guess where they're from! Clique sur la carte, joue solo ou jusqu'à 10 amis.",
+  title: "GuessMyOrigin: Guess where they're from!",
+  description: "GuessMyOrigin: Guess where they're from! Clique sur la carte, joue solo ou jusqu'à 10 amis.",
   icons: {
     icon: [{ url: "/favicon.png", type: "image/png" }],
     apple: [{ url: "/apple-touch-icon.png" }],

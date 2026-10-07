@@ -33,7 +33,7 @@ export default function LiveHud({ players, myId, lastGuess, phase }: Props) {
           </>
         ) : (
           <p className="hud-wait">
-            {phase === "playing" ? t.placePoint : "—"}
+            {phase === "playing" ? t.placePoint : "…"}
           </p>
         )}
         <div className="hud-stat total">

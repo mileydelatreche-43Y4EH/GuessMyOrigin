@@ -35,6 +35,7 @@ export type Dict = {
   loginTitle: string;
   continueGoogle: string;
   continueMicrosoft: string;
+  continueEmail: string;
   or: string;
   alreadyAccount: string;
   logIn: string;
@@ -148,11 +149,12 @@ export type Dict = {
 };
 
 const en: Dict = {
-  tagline: "GuessMyOrigin – Guess where they're from!",
+  tagline: "GuessMyOrigin: Guess where they're from!",
   signupTitle: "Sign up to play",
   loginTitle: "Log in",
   continueGoogle: "Continue with Google",
   continueMicrosoft: "Continue with Microsoft",
+  continueEmail: "Continue with Email",
   or: "OR",
   alreadyAccount: "Already have an account?",
   logIn: "LOG IN",
@@ -213,22 +215,22 @@ const en: Dict = {
   navOrgs: "ORGS",
   navModes: "MODES",
   navPlay: "PLAY",
-  exploreTitle: "Explore the world",
+  exploreTitle: "Explore the world!",
   exploreBody:
-    "Get dropped on a face from anywhere — busy streets of New York to beaches of Bali. Drop your pin and guess where they're from.",
+    "Get dropped anywhere from the busy streets of New York to the beautiful beaches of Bali. Join players today and guess where they're from!",
   friendsTitle: "Play with Friends",
   friendsBody:
-    "Put your skills to the test against your friends and family. Create your own private party and play together — up to 10 players.",
+    "Put your skills to the test against your friends and family. Create your own private party and play together, up to 10 players.",
   competeTitle: "Compete worldwide",
   competeBody:
     "Test your ability against players all across the world. Earn badges and compete against others in tournaments and events!",
   orgsTitle: "GuessMyOrigin for organizations",
   orgsBody:
-    "Bring your team together with private sessions, custom settings, and group play. Perfect for classrooms, offices and events — score big together.",
+    "Bring your team together with private sessions, custom settings, and group play. Perfect for classrooms, offices and events, score big together.",
   readMore: "READ MORE",
   modesTitle: "3 game modes",
   modesBody:
-    "Standard with zoomable photo, Hardcore flash, or Random timers that keep every round spicy. Solo or multiplayer — your call.",
+    "Standard with zoomable photo, Hardcore flash, or Random timers that keep every round spicy. Solo or multiplayer, your call.",
   readyTitle: "Ready to guess?",
   readyBody:
     "Sign up on the right and jump into a solo run or invite your crew with a 4-letter code.",
@@ -248,18 +250,18 @@ const en: Dict = {
     "Try logging out and signing back in. With Email, use the same address and password. Social logins keep your nickname on this device.",
   faq3q: "Can I play on mobile and desktop?",
   faq3a:
-    "Yes — GuessMyOrigin runs in the browser on desktop and mobile. Open the site, sign up, and play solo or with friends.",
+    "Yes, GuessMyOrigin runs in the browser on desktop and mobile. Open the site, sign up, and play solo or with friends.",
   faq4q: "What languages is GuessMyOrigin available in?",
   faq4a:
-    "Switch language anytime from the language menu in the top bar — English, Français, Deutsch, Español, Italiano, and more.",
+    "Switch language anytime from the language menu in the top bar, English, Français, Deutsch, Español, Italiano, and more.",
   faq5q: "What's the difference between the modes?",
   faq5a:
     "Standard keeps the photo available. Hardcore only flashes the face for a short time. Random changes the round timer every match.",
   faq6q: "Business enquiries",
   faq6a:
-    "For schools, companies and events, use Organizations for group sessions — or contact us for custom party setups.",
+    "For schools, companies and events, use Organizations for group sessions, or contact us for custom party setups.",
   modeStandard: "Standard",
-  modeStandardDesc: "Photo top-right — enlarge & zoom",
+  modeStandardDesc: "Photo top-right, enlarge & zoom",
   modeHardcore: "Hardcore",
   modeHardcoreDesc: "The face only appears for a moment",
   modeRandom: "Random",
@@ -280,11 +282,12 @@ const en: Dict = {
 
 const fr: Dict = {
   ...en,
-  tagline: "GuessMyOrigin – Devine d'où ils viennent !",
+  tagline: "GuessMyOrigin: Devine d'où ils viennent !",
   signupTitle: "Inscris-toi pour jouer",
   loginTitle: "Connexion",
   continueGoogle: "Continuer avec Google",
   continueMicrosoft: "Continuer avec Microsoft",
+  continueEmail: "Continuer avec Email",
   or: "OU",
   alreadyAccount: "Tu as déjà un compte ?",
   logIn: "CONNEXION",
@@ -345,12 +348,12 @@ const fr: Dict = {
   navOrgs: "ORGS",
   navModes: "MODES",
   navPlay: "JOUER",
-  exploreTitle: "Explore le monde",
+  exploreTitle: "Explore le monde !",
   exploreBody:
-    "Un visage surgit de n'importe où — rues de New York ou plages de Bali. Place ton pin et devine d'où ils viennent.",
+    "Atterris n'importe où, des rues animées de New York aux magnifiques plages de Bali. Rejoins les joueurs et devine d'où ils viennent !",
   friendsTitle: "Joue entre amis",
   friendsBody:
-    "Mesure-toi à tes amis et ta famille. Crée une partie privée et jouez ensemble — jusqu'à 10 joueurs.",
+    "Mesure-toi à tes amis et ta famille. Crée une partie privée et jouez ensemble, jusqu'à 10 joueurs.",
   competeTitle: "Compete dans le monde",
   competeBody:
     "Affronte des joueurs partout sur la planète. Gagne des badges et participe à des tournois et événements !",
@@ -360,7 +363,7 @@ const fr: Dict = {
   readMore: "EN SAVOIR PLUS",
   modesTitle: "3 modes de jeu",
   modesBody:
-    "Standard avec photo zoomable, Hardcore en flash, ou Random avec des chronos qui changent. Solo ou multi — à toi de choisir.",
+    "Standard avec photo zoomable, Hardcore en flash, ou Random avec des chronos qui changent. Solo ou multi, à toi de choisir.",
   readyTitle: "Prêt à guess ?",
   readyBody:
     "Inscris-toi à droite et lance un solo, ou invite ton crew avec un code à 4 lettres.",
@@ -380,16 +383,16 @@ const fr: Dict = {
     "Essaie de te déconnecter puis reconnecter. En Email, utilise la même adresse et le même mot de passe. Les connexions sociales gardent ton pseudo sur cet appareil.",
   faq3q: "Je peux jouer sur mobile et ordinateur ?",
   faq3a:
-    "Oui — GuessMyOrigin tourne dans le navigateur sur desktop et mobile. Ouvre le site, inscris-toi, et joue solo ou entre amis.",
+    "Oui, GuessMyOrigin tourne dans le navigateur sur desktop et mobile. Ouvre le site, inscris-toi, et joue solo ou entre amis.",
   faq4q: "Dans quelles langues GuessMyOrigin est-il dispo ?",
   faq4a:
-    "Change de langue à tout moment via le menu en haut — Français, English, Deutsch, Español, Italiano, et plus encore.",
+    "Change de langue à tout moment via le menu en haut, Français, English, Deutsch, Español, Italiano, et plus encore.",
   faq5q: "Quelle différence entre les modes ?",
   faq5a:
     "Standard garde la photo. Hardcore ne flash le visage qu'un instant. Random change le chrono à chaque manche.",
   faq6q: "Demandes professionnelles",
   faq6a:
-    "Pour écoles, entreprises et événements, utilise Organisations pour des sessions de groupe — ou contacte-nous pour des setups custom.",
+    "Pour écoles, entreprises et événements, utilise Organisations pour des sessions de groupe, ou contacte-nous pour des setups custom.",
   modeStandard: "Standard",
   modeStandardDesc: "Photo en haut à droite, agrandir & zoomer",
   modeHardcore: "Hardcore",
@@ -412,11 +415,12 @@ const fr: Dict = {
 
 const de: Dict = {
   ...en,
-  tagline: "GuessMyOrigin – Rate, woher sie kommen!",
+  tagline: "GuessMyOrigin: Rate, woher sie kommen!",
   signupTitle: "Registrieren zum Spielen",
   loginTitle: "Anmelden",
   continueGoogle: "Weiter mit Google",
   continueMicrosoft: "Weiter mit Microsoft",
+  continueEmail: "Weiter mit E-Mail",
   or: "ODER",
   alreadyAccount: "Schon ein Konto?",
   logIn: "ANMELDEN",
@@ -477,10 +481,10 @@ const de: Dict = {
   navPlay: "SPIELEN",
   exploreTitle: "Erkunde die Welt",
   exploreBody:
-    "Ein Gesicht aus aller Welt — von New York bis Bali. Setze deinen Pin und rate, woher sie kommen.",
+    "Ein Gesicht aus aller Welt, von New York bis Bali. Setze deinen Pin und rate, woher sie kommen.",
   friendsTitle: "Mit Freunden spielen",
   friendsBody:
-    "Miss dich mit Freunden und Familie. Erstelle eine private Party — bis zu 10 Spieler.",
+    "Miss dich mit Freunden und Familie. Erstelle eine private Party, bis zu 10 Spieler.",
   competeTitle: "Weltweit konkurrieren",
   competeBody:
     "Tritt gegen Spieler auf der ganzen Welt an. Sammle Abzeichen und nimm an Turnieren teil!",
@@ -490,10 +494,10 @@ const de: Dict = {
   readMore: "MEHR LESEN",
   modesTitle: "3 Spielmodi",
   modesBody:
-    "Standard mit Zoom, Hardcore-Flash oder Random-Timer. Solo oder Multiplayer — deine Wahl.",
+    "Standard mit Zoom, Hardcore-Flash oder Random-Timer. Solo oder Multiplayer, deine Wahl.",
   readyTitle: "Bereit zu raten?",
   readyBody:
-    "Registriere dich rechts und starte Solo — oder lade dein Team mit einem 4-Buchstaben-Code ein.",
+    "Registriere dich rechts und starte Solo, oder lade dein Team mit einem 4-Buchstaben-Code ein.",
   footerExplore: "ENTDECKEN",
   footerFaq: "HÄUFIGE FRAGEN",
   footerPricing: "Preise",
@@ -510,18 +514,18 @@ const de: Dict = {
     "Melde dich ab und wieder an. Bei E-Mail dieselbe Adresse und dasselbe Passwort nutzen. Social-Logins speichern deinen Namen auf diesem Gerät.",
   faq3q: "Kann ich auf Handy und Desktop spielen?",
   faq3a:
-    "Ja — GuessMyOrigin läuft im Browser auf Desktop und Mobil. Seite öffnen, registrieren, solo oder mit Freunden spielen.",
+    "Ja, GuessMyOrigin läuft im Browser auf Desktop und Mobil. Seite öffnen, registrieren, solo oder mit Freunden spielen.",
   faq4q: "In welchen Sprachen gibt es GuessMyOrigin?",
   faq4a:
-    "Sprache jederzeit im Menü oben wechseln — Deutsch, English, Français, Español und mehr.",
+    "Sprache jederzeit im Menü oben wechseln, Deutsch, English, Français, Español und mehr.",
   faq5q: "Was ist der Unterschied zwischen den Modi?",
   faq5a:
     "Standard behält das Foto. Hardcore zeigt das Gesicht nur kurz. Random ändert den Timer jede Runde.",
   faq6q: "Geschäftsanfragen",
   faq6a:
-    "Für Schulen, Firmen und Events: Organisationen für Gruppensessions — oder kontaktiere uns für Custom-Setups.",
+    "Für Schulen, Firmen und Events: Organisationen für Gruppensessions, oder kontaktiere uns für Custom-Setups.",
   modeStandard: "Standard",
-  modeStandardDesc: "Foto oben rechts — vergrößern & zoomen",
+  modeStandardDesc: "Foto oben rechts, vergrößern & zoomen",
   modeHardcore: "Hardcore",
   modeHardcoreDesc: "Das Gesicht erscheint nur einen Moment",
   modeRandom: "Random",
@@ -542,11 +546,12 @@ const de: Dict = {
 
 const es: Dict = {
   ...en,
-  tagline: "GuessMyOrigin – ¡Adivina de dónde son!",
+  tagline: "GuessMyOrigin: ¡Adivina de dónde son!",
   signupTitle: "Regístrate para jugar",
   loginTitle: "Iniciar sesión",
   continueGoogle: "Continuar con Google",
   continueMicrosoft: "Continuar con Microsoft",
+  continueEmail: "Continuar con Email",
   or: "O",
   alreadyAccount: "¿Ya tienes cuenta?",
   logIn: "ENTRAR",
@@ -607,10 +612,10 @@ const es: Dict = {
   navPlay: "JUGAR",
   exploreTitle: "Explora el mundo",
   exploreBody:
-    "Un rostro de cualquier lugar — calles de Nueva York o playas de Bali. Coloca tu pin y adivina de dónde son.",
+    "Un rostro de cualquier lugar, calles de Nueva York o playas de Bali. Coloca tu pin y adivina de dónde son.",
   friendsTitle: "Juega con amigos",
   friendsBody:
-    "Ponte a prueba con amigos y familia. Crea una sala privada — hasta 10 jugadores.",
+    "Ponte a prueba con amigos y familia. Crea una sala privada, hasta 10 jugadores.",
   competeTitle: "Compite en el mundo",
   competeBody:
     "Mide tu habilidad contra jugadores de todo el planeta. Gana insignias y compite en torneos!",
@@ -620,7 +625,7 @@ const es: Dict = {
   readMore: "LEER MÁS",
   modesTitle: "3 modos de juego",
   modesBody:
-    "Estándar con foto con zoom, Hardcore flash o Random con cronos cambiantes. Solo o multi — tú eliges.",
+    "Estándar con foto con zoom, Hardcore flash o Random con cronos cambiantes. Solo o multi, tú eliges.",
   readyTitle: "¿Listo para adivinar?",
   readyBody:
     "Regístrate a la derecha y lanza un solo, o invita a tu crew con un código de 4 letras.",
@@ -640,18 +645,18 @@ const es: Dict = {
     "Cierra sesión y vuelve a entrar. Con Email usa la misma dirección y contraseña. Los logins sociales guardan tu apodo en este dispositivo.",
   faq3q: "¿Puedo jugar en móvil y escritorio?",
   faq3a:
-    "Sí — GuessMyOrigin funciona en el navegador en escritorio y móvil. Abre el sitio, regístrate y juega solo o con amigos.",
+    "Sí, GuessMyOrigin funciona en el navegador en escritorio y móvil. Abre el sitio, regístrate y juega solo o con amigos.",
   faq4q: "¿En qué idiomas está disponible?",
   faq4a:
-    "Cambia el idioma cuando quieras desde el menú superior — Español, English, Français, Deutsch y más.",
+    "Cambia el idioma cuando quieras desde el menú superior, Español, English, Français, Deutsch y más.",
   faq5q: "¿Cuál es la diferencia entre los modos?",
   faq5a:
     "Estándar mantiene la foto. Hardcore solo muestra el rostro un instante. Random cambia el cronómetro cada ronda.",
   faq6q: "Consultas empresariales",
   faq6a:
-    "Para escuelas, empresas y eventos, usa Organizaciones para sesiones de grupo — o contáctanos para setups a medida.",
+    "Para escuelas, empresas y eventos, usa Organizaciones para sesiones de grupo, o contáctanos para setups a medida.",
   modeStandard: "Estándar",
-  modeStandardDesc: "Foto arriba a la derecha — ampliar y zoom",
+  modeStandardDesc: "Foto arriba a la derecha, ampliar y zoom",
   modeHardcore: "Hardcore",
   modeHardcoreDesc: "El rostro solo aparece un instante",
   modeRandom: "Random",
@@ -672,11 +677,12 @@ const es: Dict = {
 
 const it: Dict = {
   ...en,
-  tagline: "GuessMyOrigin – Indovina da dove vengono!",
+  tagline: "GuessMyOrigin: Indovina da dove vengono!",
   signupTitle: "Registrati per giocare",
   loginTitle: "Accedi",
   continueGoogle: "Continua con Google",
   continueMicrosoft: "Continua con Microsoft",
+  continueEmail: "Continua con Email",
   or: "OPPURE",
   alreadyAccount: "Hai già un account?",
   logIn: "ACCEDI",
@@ -737,10 +743,10 @@ const it: Dict = {
   navPlay: "GIOCA",
   exploreTitle: "Esplora il mondo",
   exploreBody:
-    "Un volto da ovunque — strade di New York o spiagge di Bali. Metti il pin e indovina da dove vengono.",
+    "Un volto da ovunque, strade di New York o spiagge di Bali. Metti il pin e indovina da dove vengono.",
   friendsTitle: "Gioca con gli amici",
   friendsBody:
-    "Metti alla prova le tue abilità con amici e famiglia. Crea una party privata — fino a 10 giocatori.",
+    "Metti alla prova le tue abilità con amici e famiglia. Crea una party privata, fino a 10 giocatori.",
   competeTitle: "Competi nel mondo",
   competeBody:
     "Sfida giocatori di tutto il mondo. Guadagna badge e partecipa a tornei ed eventi!",
@@ -750,7 +756,7 @@ const it: Dict = {
   readMore: "LEGGI DI PIÙ",
   modesTitle: "3 modalità di gioco",
   modesBody:
-    "Standard con foto zoomabile, Hardcore flash o Random con timer variabili. Solo o multi — scegli tu.",
+    "Standard con foto zoomabile, Hardcore flash o Random con timer variabili. Solo o multi, scegli tu.",
   readyTitle: "Pronto a indovinare?",
   readyBody:
     "Registrati a destra e lancia un solo, oppure invita la crew con un codice di 4 lettere.",
@@ -770,18 +776,18 @@ const it: Dict = {
     "Prova a uscire e rientrare. Con Email usa lo stesso indirizzo e password. I login social tengono il nickname su questo dispositivo.",
   faq3q: "Posso giocare su mobile e desktop?",
   faq3a:
-    "Sì — GuessMyOrigin gira nel browser su desktop e mobile. Apri il sito, registrati e gioca solo o con amici.",
+    "Sì, GuessMyOrigin gira nel browser su desktop e mobile. Apri il sito, registrati e gioca solo o con amici.",
   faq4q: "In quali lingue è disponibile?",
   faq4a:
-    "Cambia lingua quando vuoi dal menu in alto — Italiano, English, Français, Deutsch e altro.",
+    "Cambia lingua quando vuoi dal menu in alto, Italiano, English, Français, Deutsch e altro.",
   faq5q: "Qual è la differenza tra le modalità?",
   faq5a:
     "Standard tiene la foto. Hardcore mostra il volto solo un istante. Random cambia il timer ogni round.",
   faq6q: "Richieste business",
   faq6a:
-    "Per scuole, aziende ed eventi usa Organizzazioni per sessioni di gruppo — o contattaci per setup su misura.",
+    "Per scuole, aziende ed eventi usa Organizzazioni per sessioni di gruppo, o contattaci per setup su misura.",
   modeStandard: "Standard",
-  modeStandardDesc: "Foto in alto a destra — ingrandisci e zoom",
+  modeStandardDesc: "Foto in alto a destra, ingrandisci e zoom",
   modeHardcore: "Hardcore",
   modeHardcoreDesc: "Il volto appare solo un istante",
   modeRandom: "Random",
@@ -802,11 +808,12 @@ const it: Dict = {
 
 const sv: Dict = {
   ...en,
-  tagline: "GuessMyOrigin – Gissa var de kommer ifrån!",
+  tagline: "GuessMyOrigin: Gissa var de kommer ifrån!",
   signupTitle: "Registrera dig för att spela",
   loginTitle: "Logga in",
   continueGoogle: "Fortsätt med Google",
   continueMicrosoft: "Fortsätt med Microsoft",
+  continueEmail: "Fortsätt med e-post",
   or: "ELLER",
   alreadyAccount: "Har du redan ett konto?",
   logIn: "LOGGA IN",
@@ -867,10 +874,10 @@ const sv: Dict = {
   navPlay: "SPELA",
   exploreTitle: "Utforska världen",
   exploreBody:
-    "Ett ansikte från var som helst — New Yorks gator till Balis stränder. Placera din pin och gissa varifrån de kommer.",
+    "Ett ansikte från var som helst, New Yorks gator till Balis stränder. Placera din pin och gissa varifrån de kommer.",
   friendsTitle: "Spela med vänner",
   friendsBody:
-    "Utmana vänner och familj. Skapa en privat party — upp till 10 spelare.",
+    "Utmana vänner och familj. Skapa en privat party, upp till 10 spelare.",
   competeTitle: "Tävla världen över",
   competeBody:
     "Mät dig mot spelare över hela världen. Tjäna badges och tävla i turneringar!",
@@ -880,10 +887,10 @@ const sv: Dict = {
   readMore: "LÄS MER",
   modesTitle: "3 spellägen",
   modesBody:
-    "Standard med zoombar foto, Hardcore-flash eller Random-timers. Solo eller multi — ditt val.",
+    "Standard med zoombar foto, Hardcore-flash eller Random-timers. Solo eller multi, ditt val.",
   readyTitle: "Redo att gissa?",
   readyBody:
-    "Registrera dig till höger och starta solo — eller bjud in crewet med en 4-bokstavskod.",
+    "Registrera dig till höger och starta solo, eller bjud in crewet med en 4-bokstavskod.",
   footerExplore: "UPPTÄCK",
   footerFaq: "VANLIGA FRÅGOR",
   footerPricing: "Priser",
@@ -900,18 +907,18 @@ const sv: Dict = {
     "Logga ut och in igen. Med e-post: samma adress och lösenord. Sociala inloggningar sparar smeknamnet på den här enheten.",
   faq3q: "Kan jag spela på mobil och dator?",
   faq3a:
-    "Ja — GuessMyOrigin körs i webbläsaren på dator och mobil. Öppna sajten, registrera dig och spela solo eller med vänner.",
+    "Ja, GuessMyOrigin körs i webbläsaren på dator och mobil. Öppna sajten, registrera dig och spela solo eller med vänner.",
   faq4q: "Vilka språk finns GuessMyOrigin på?",
   faq4a:
-    "Byt språk när som helst via menyn högst upp — Svenska, English, Français och fler.",
+    "Byt språk när som helst via menyn högst upp, Svenska, English, Français och fler.",
   faq5q: "Vad skiljer lägena åt?",
   faq5a:
     "Standard behåller fotot. Hardcore flashar ansiktet kort. Random byter timer varje runda.",
   faq6q: "Företagsförfrågningar",
   faq6a:
-    "För skolor, företag och event: använd Organisationer för gruppsessioner — eller kontakta oss för custom setups.",
+    "För skolor, företag och event: använd Organisationer för gruppsessioner, eller kontakta oss för custom setups.",
   modeStandard: "Standard",
-  modeStandardDesc: "Foto uppe till höger — förstora & zooma",
+  modeStandardDesc: "Foto uppe till höger, förstora & zooma",
   modeHardcore: "Hardcore",
   modeHardcoreDesc: "Ansiktet syns bara ett ögonblick",
   modeRandom: "Random",
@@ -932,11 +939,12 @@ const sv: Dict = {
 
 const nl: Dict = {
   ...en,
-  tagline: "GuessMyOrigin – Raad waar ze vandaan komen!",
+  tagline: "GuessMyOrigin: Raad waar ze vandaan komen!",
   signupTitle: "Meld je aan om te spelen",
   loginTitle: "Inloggen",
   continueGoogle: "Doorgaan met Google",
   continueMicrosoft: "Doorgaan met Microsoft",
+  continueEmail: "Doorgaan met e-mail",
   or: "OF",
   alreadyAccount: "Heb je al een account?",
   logIn: "INLOGGEN",
@@ -997,10 +1005,10 @@ const nl: Dict = {
   navPlay: "SPELEN",
   exploreTitle: "Verken de wereld",
   exploreBody:
-    "Een gezicht van overal — straten van New York tot stranden van Bali. Zet je pin en raad waar ze vandaan komen.",
+    "Een gezicht van overal, straten van New York tot stranden van Bali. Zet je pin en raad waar ze vandaan komen.",
   friendsTitle: "Speel met vrienden",
   friendsBody:
-    "Test je skills tegen vrienden en familie. Maak een privéparty — tot 10 spelers.",
+    "Test je skills tegen vrienden en familie. Maak een privéparty, tot 10 spelers.",
   competeTitle: "Wereldwijd strijden",
   competeBody:
     "Meet je met spelers over de hele wereld. Verdien badges en doe mee aan toernooien!",
@@ -1010,10 +1018,10 @@ const nl: Dict = {
   readMore: "MEER LEZEN",
   modesTitle: "3 spelmodi",
   modesBody:
-    "Standard met zoomfoto, Hardcore-flash of Random-timers. Solo of multi — jij kiest.",
+    "Standard met zoomfoto, Hardcore-flash of Random-timers. Solo of multi, jij kiest.",
   readyTitle: "Klaar om te raden?",
   readyBody:
-    "Meld je rechts aan en start solo — of nodig je crew uit met een 4-lettercode.",
+    "Meld je rechts aan en start solo, of nodig je crew uit met een 4-lettercode.",
   footerExplore: "ONTDEK",
   footerFaq: "VEELGESTELDE VRAGEN",
   footerPricing: "Prijzen",
@@ -1030,18 +1038,18 @@ const nl: Dict = {
     "Log uit en weer in. Met e-mail: zelfde adres en wachtwoord. Social logins bewaren je bijnaam op dit apparaat.",
   faq3q: "Kan ik op mobiel en desktop spelen?",
   faq3a:
-    "Ja — GuessMyOrigin draait in de browser op desktop en mobiel. Open de site, meld je aan en speel solo of met vrienden.",
+    "Ja, GuessMyOrigin draait in de browser op desktop en mobiel. Open de site, meld je aan en speel solo of met vrienden.",
   faq4q: "In welke talen is GuessMyOrigin beschikbaar?",
   faq4a:
-    "Wissel wanneer je wilt via het menu bovenaan — Nederlands, English, Français en meer.",
+    "Wissel wanneer je wilt via het menu bovenaan, Nederlands, English, Français en meer.",
   faq5q: "Wat is het verschil tussen de modi?",
   faq5a:
     "Standard houdt de foto. Hardcore toont het gezicht kort. Random verandert de timer elke ronde.",
   faq6q: "Zakelijke vragen",
   faq6a:
-    "Voor scholen, bedrijven en events: gebruik Organisaties voor groepssessies — of contacteer ons voor custom setups.",
+    "Voor scholen, bedrijven en events: gebruik Organisaties voor groepssessies, of contacteer ons voor custom setups.",
   modeStandard: "Standard",
-  modeStandardDesc: "Foto rechtsboven — vergroten & zoomen",
+  modeStandardDesc: "Foto rechtsboven, vergroten & zoomen",
   modeHardcore: "Hardcore",
   modeHardcoreDesc: "Het gezicht verschijnt slechts even",
   modeRandom: "Random",
@@ -1062,11 +1070,12 @@ const nl: Dict = {
 
 const pt: Dict = {
   ...en,
-  tagline: "GuessMyOrigin – Adivinha de onde são!",
+  tagline: "GuessMyOrigin: Adivinha de onde são!",
   signupTitle: "Regista-te para jogar",
   loginTitle: "Entrar",
   continueGoogle: "Continuar com Google",
   continueMicrosoft: "Continuar com Microsoft",
+  continueEmail: "Continuar com Email",
   or: "OU",
   alreadyAccount: "Já tens conta?",
   logIn: "ENTRAR",
@@ -1127,10 +1136,10 @@ const pt: Dict = {
   navPlay: "JOGAR",
   exploreTitle: "Explora o mundo",
   exploreBody:
-    "Um rosto de qualquer lado — ruas de Nova Iorque às praias de Bali. Coloca o pin e adivinha de onde são.",
+    "Um rosto de qualquer lado, ruas de Nova Iorque às praias de Bali. Coloca o pin e adivinha de onde são.",
   friendsTitle: "Joga com amigos",
   friendsBody:
-    "Põe as tuas skills à prova com amigos e família. Cria uma party privada — até 10 jogadores.",
+    "Põe as tuas skills à prova com amigos e família. Cria uma party privada, até 10 jogadores.",
   competeTitle: "Compete no mundo",
   competeBody:
     "Mede-te com jogadores de todo o mundo. Ganha badges e compete em torneios!",
@@ -1140,7 +1149,7 @@ const pt: Dict = {
   readMore: "LER MAIS",
   modesTitle: "3 modos de jogo",
   modesBody:
-    "Standard com foto com zoom, Hardcore flash ou Random com timers a mudar. Solo ou multi — tu decides.",
+    "Standard com foto com zoom, Hardcore flash ou Random com timers a mudar. Solo ou multi, tu decides.",
   readyTitle: "Pronto para adivinhar?",
   readyBody:
     "Regista-te à direita e lança um solo, ou convida a crew com um código de 4 letras.",
@@ -1160,18 +1169,18 @@ const pt: Dict = {
     "Tenta sair e entrar de novo. Com Email usa o mesmo endereço e palavra-passe. Logins sociais guardam o nick neste dispositivo.",
   faq3q: "Posso jogar no telemóvel e no computador?",
   faq3a:
-    "Sim — GuessMyOrigin corre no browser em desktop e mobile. Abre o site, regista-te e joga solo ou com amigos.",
+    "Sim, GuessMyOrigin corre no browser em desktop e mobile. Abre o site, regista-te e joga solo ou com amigos.",
   faq4q: "Em que línguas está disponível?",
   faq4a:
-    "Muda de língua quando quiseres no menu de cima — Português, English, Français e mais.",
+    "Muda de língua quando quiseres no menu de cima, Português, English, Français e mais.",
   faq5q: "Qual a diferença entre os modos?",
   faq5a:
     "Standard mantém a foto. Hardcore só mostra o rosto um instante. Random muda o timer a cada ronda.",
   faq6q: "Pedidos empresariais",
   faq6a:
-    "Para escolas, empresas e eventos, usa Organizações para sessões de grupo — ou contacta-nos para setups à medida.",
+    "Para escolas, empresas e eventos, usa Organizações para sessões de grupo, ou contacta-nos para setups à medida.",
   modeStandard: "Standard",
-  modeStandardDesc: "Foto no canto superior — ampliar e zoom",
+  modeStandardDesc: "Foto no canto superior, ampliar e zoom",
   modeHardcore: "Hardcore",
   modeHardcoreDesc: "O rosto só aparece um instante",
   modeRandom: "Random",
@@ -1192,11 +1201,12 @@ const pt: Dict = {
 
 const tr: Dict = {
   ...en,
-  tagline: "GuessMyOrigin – Nereden geldiklerini tahmin et!",
+  tagline: "GuessMyOrigin: Nereden geldiklerini tahmin et!",
   signupTitle: "Oynamak için kaydol",
   loginTitle: "Giriş yap",
   continueGoogle: "Google ile devam",
   continueMicrosoft: "Microsoft ile devam",
+  continueEmail: "E-posta ile devam",
   or: "VEYA",
   alreadyAccount: "Zaten hesabın var mı?",
   logIn: "GİRİŞ",
@@ -1257,10 +1267,10 @@ const tr: Dict = {
   navPlay: "OYNA",
   exploreTitle: "Dünyayı keşfet",
   exploreBody:
-    "Her yerden bir yüz — New York sokaklarından Bali plajlarına. Pinini koy ve nereden geldiklerini tahmin et.",
+    "Her yerden bir yüz, New York sokaklarından Bali plajlarına. Pinini koy ve nereden geldiklerini tahmin et.",
   friendsTitle: "Arkadaşlarla oyna",
   friendsBody:
-    "Yeteneklerini arkadaşların ve ailene karşı test et. Özel parti oluştur — 10 oyuncuya kadar.",
+    "Yeteneklerini arkadaşların ve ailene karşı test et. Özel parti oluştur, 10 oyuncuya kadar.",
   competeTitle: "Dünya çapında yarış",
   competeBody:
     "Dünyanın dört bir yanındaki oyunculara karşı kendini sına. Rozet kazan, turnuvalara katıl!",
@@ -1270,7 +1280,7 @@ const tr: Dict = {
   readMore: "DAHA FAZLA",
   modesTitle: "3 oyun modu",
   modesBody:
-    "Yakınlaştırılabilir fotoğraflı Standard, Hardcore flash veya Random zamanlayıcılar. Solo veya multi — sen seç.",
+    "Yakınlaştırılabilir fotoğraflı Standard, Hardcore flash veya Random zamanlayıcılar. Solo veya multi, sen seç.",
   readyTitle: "Tahmine hazır mısın?",
   readyBody:
     "Sağdan kaydol ve solo başlat, ya da 4 harfli kodla ekibini davet et.",
@@ -1290,18 +1300,18 @@ const tr: Dict = {
     "Çıkış yapıp tekrar dene. E-posta ile aynı adres ve şifreyi kullan. Sosyal girişler takma adını bu cihazda tutar.",
   faq3q: "Mobil ve masaüstünde oynayabilir miyim?",
   faq3a:
-    "Evet — GuessMyOrigin masaüstü ve mobilde tarayıcıda çalışır. Siteyi aç, kaydol, solo veya arkadaşlarla oyna.",
+    "Evet, GuessMyOrigin masaüstü ve mobilde tarayıcıda çalışır. Siteyi aç, kaydol, solo veya arkadaşlarla oyna.",
   faq4q: "GuessMyOrigin hangi dillerde?",
   faq4a:
-    "Üst menüden istediğin zaman dil değiştir — Türkçe, English, Français ve daha fazlası.",
+    "Üst menüden istediğin zaman dil değiştir, Türkçe, English, Français ve daha fazlası.",
   faq5q: "Modlar arasındaki fark nedir?",
   faq5a:
     "Standard fotoğrafı tutar. Hardcore yüzü kısa gösterir. Random her turda zamanlayıcıyı değiştirir.",
   faq6q: "İş soruları",
   faq6a:
-    "Okullar, şirketler ve etkinlikler için Kurumlar ile grup oturumları — veya özel kurulum için bize ulaş.",
+    "Okullar, şirketler ve etkinlikler için Kurumlar ile grup oturumları, veya özel kurulum için bize ulaş.",
   modeStandard: "Standard",
-  modeStandardDesc: "Sağ üstte foto — büyüt ve yakınlaştır",
+  modeStandardDesc: "Sağ üstte foto, büyüt ve yakınlaştır",
   modeHardcore: "Hardcore",
   modeHardcoreDesc: "Yüz yalnızca bir an görünür",
   modeRandom: "Random",
@@ -1322,11 +1332,12 @@ const tr: Dict = {
 
 const ja: Dict = {
   ...en,
-  tagline: "GuessMyOrigin – 出身地を当てよう！",
+  tagline: "GuessMyOrigin: 出身地を当てよう！",
   signupTitle: "プレイするには登録",
   loginTitle: "ログイン",
   continueGoogle: "Googleで続行",
   continueMicrosoft: "Microsoftで続行",
+  continueEmail: "メールで続行",
   or: "または",
   alreadyAccount: "すでにアカウントがありますか？",
   logIn: "ログイン",
@@ -1387,10 +1398,10 @@ const ja: Dict = {
   navPlay: "プレイ",
   exploreTitle: "世界を探検",
   exploreBody:
-    "世界中の顔が登場 — ニューヨークの街からバリのビーチまで。ピンを置いて出身地を当てよう。",
+    "世界中の顔が登場, ニューヨークの街からバリのビーチまで。ピンを置いて出身地を当てよう。",
   friendsTitle: "友達とプレイ",
   friendsBody:
-    "友達や家族と腕を競おう。プライベートパーティーを作成 — 最大10人。",
+    "友達や家族と腕を競おう。プライベートパーティーを作成, 最大10人。",
   competeTitle: "世界中で競争",
   competeBody:
     "世界中のプレイヤーと実力を競い、バッジを獲得し、トーナメントに参加しよう！",
@@ -1420,18 +1431,18 @@ const ja: Dict = {
     "ログアウトして再ログインを試してください。メールは同じアドレスとパスワードを。ソーシャルログインはこの端末にニックネームを保存します。",
   faq3q: "スマホとPCで遊べますか？",
   faq3a:
-    "はい — GuessMyOriginはデスクトップとモバイルのブラウザで動作します。サイトを開いて登録し、ソロや友達とプレイ。",
+    "はい, GuessMyOriginはデスクトップとモバイルのブラウザで動作します。サイトを開いて登録し、ソロや友達とプレイ。",
   faq4q: "どの言語に対応していますか？",
   faq4a:
-    "上部の言語メニューからいつでも切り替え — 日本語、English、Français など。",
+    "上部の言語メニューからいつでも切り替え, 日本語、English、Français など。",
   faq5q: "モードの違いは？",
   faq5a:
     "スタンダードは写真を表示。ハードコアは一瞬だけ顔を見せます。ランダムは毎ラウンドタイマーが変わります。",
   faq6q: "ビジネスのお問い合わせ",
   faq6a:
-    "学校・企業・イベントは組織向けでグループセッションを — またはカスタム設定についてご連絡ください。",
+    "学校・企業・イベントは組織向けでグループセッションを, またはカスタム設定についてご連絡ください。",
   modeStandard: "スタンダード",
-  modeStandardDesc: "右上の写真 — 拡大＆ズーム",
+  modeStandardDesc: "右上の写真, 拡大＆ズーム",
   modeHardcore: "ハードコア",
   modeHardcoreDesc: "顔は一瞬だけ表示",
   modeRandom: "ランダム",
@@ -1452,11 +1463,12 @@ const ja: Dict = {
 
 const pl: Dict = {
   ...en,
-  tagline: "GuessMyOrigin – Zgadnij, skąd pochodzą!",
+  tagline: "GuessMyOrigin: Zgadnij, skąd pochodzą!",
   signupTitle: "Zarejestruj się, by grać",
   loginTitle: "Zaloguj się",
   continueGoogle: "Kontynuuj z Google",
   continueMicrosoft: "Kontynuuj z Microsoft",
+  continueEmail: "Kontynuuj z e-mailem",
   or: "LUB",
   alreadyAccount: "Masz już konto?",
   logIn: "ZALOGUJ",
@@ -1517,10 +1529,10 @@ const pl: Dict = {
   navPlay: "GRAJ",
   exploreTitle: "Odkrywaj świat",
   exploreBody:
-    "Twarz z dowolnego miejsca — ulice Nowego Jorku czy plaże Bali. Postaw pin i zgadnij, skąd pochodzą.",
+    "Twarz z dowolnego miejsca, ulice Nowego Jorku czy plaże Bali. Postaw pin i zgadnij, skąd pochodzą.",
   friendsTitle: "Graj ze znajomymi",
   friendsBody:
-    "Sprawdź się ze znajomymi i rodziną. Stwórz prywatną party — do 10 graczy.",
+    "Sprawdź się ze znajomymi i rodziną. Stwórz prywatną party, do 10 graczy.",
   competeTitle: "Rywalizuj na świecie",
   competeBody:
     "Zmierz się z graczami z całego świata. Zdobywaj odznaki i graj w turniejach!",
@@ -1530,10 +1542,10 @@ const pl: Dict = {
   readMore: "CZYTAJ WIĘCEJ",
   modesTitle: "3 tryby gry",
   modesBody:
-    "Standard ze zoomem, Hardcore flash lub Random z timerami. Solo lub multi — Twój wybór.",
+    "Standard ze zoomem, Hardcore flash lub Random z timerami. Solo lub multi, Twój wybór.",
   readyTitle: "Gotowy zgadywać?",
   readyBody:
-    "Zarejestruj się po prawej i zacznij solo — albo zaproś ekipę kodem 4-literowym.",
+    "Zarejestruj się po prawej i zacznij solo, albo zaproś ekipę kodem 4-literowym.",
   footerExplore: "ODKRYWAJ",
   footerFaq: "CZĘSTE PYTANIA",
   footerPricing: "Cennik",
@@ -1550,18 +1562,18 @@ const pl: Dict = {
     "Wyloguj się i zaloguj ponownie. Przy e-mailu użyj tego samego adresu i hasła. Logowania społecznościowe trzymają nick na tym urządzeniu.",
   faq3q: "Czy mogę grać na telefonie i komputerze?",
   faq3a:
-    "Tak — GuessMyOrigin działa w przeglądarce na desktopie i mobile. Otwórz stronę, zarejestruj się i graj solo lub ze znajomymi.",
+    "Tak, GuessMyOrigin działa w przeglądarce na desktopie i mobile. Otwórz stronę, zarejestruj się i graj solo lub ze znajomymi.",
   faq4q: "W jakich językach jest GuessMyOrigin?",
   faq4a:
-    "Zmieniaj język w dowolnym momencie w menu u góry — Polski, English, Français i więcej.",
+    "Zmieniaj język w dowolnym momencie w menu u góry, Polski, English, Français i więcej.",
   faq5q: "Jaka jest różnica między trybami?",
   faq5a:
     "Standard zostawia zdjęcie. Hardcore pokazuje twarz tylko na chwilę. Random zmienia timer co rundę.",
   faq6q: "Zapytania biznesowe",
   faq6a:
-    "Dla szkół, firm i eventów użyj Organizacji do sesji grupowych — lub skontaktuj się w sprawie custom setupów.",
+    "Dla szkół, firm i eventów użyj Organizacji do sesji grupowych, lub skontaktuj się w sprawie custom setupów.",
   modeStandard: "Standard",
-  modeStandardDesc: "Zdjęcie u góry — powiększ i zoom",
+  modeStandardDesc: "Zdjęcie u góry, powiększ i zoom",
   modeHardcore: "Hardcore",
   modeHardcoreDesc: "Twarz pojawia się tylko na chwilę",
   modeRandom: "Random",
@@ -1582,11 +1594,12 @@ const pl: Dict = {
 
 const ko: Dict = {
   ...en,
-  tagline: "GuessMyOrigin – 어디서 왔는지 맞춰보세요!",
+  tagline: "GuessMyOrigin: 어디서 왔는지 맞춰보세요!",
   signupTitle: "플레이하려면 가입",
   loginTitle: "로그인",
   continueGoogle: "Google로 계속",
   continueMicrosoft: "Microsoft로 계속",
+  continueEmail: "이메일로 계속",
   or: "또는",
   alreadyAccount: "이미 계정이 있나요?",
   logIn: "로그인",
@@ -1647,7 +1660,7 @@ const ko: Dict = {
   navPlay: "플레이",
   exploreTitle: "세계를 탐험하세요",
   exploreBody:
-    "어디서든 얼굴이 나타납니다 — 뉴욕 거리부터 발리 해변까지. 핀을 놓고 출신을 맞춰보세요.",
+    "어디서든 얼굴이 나타납니다, 뉴욕 거리부터 발리 해변까지. 핀을 놓고 출신을 맞춰보세요.",
   friendsTitle: "친구와 플레이",
   friendsBody:
     "친구·가족과 실력을 겨뤄보세요. 비공개 파티를 만들고 최대 10명까지 함께 플레이.",
@@ -1680,10 +1693,10 @@ const ko: Dict = {
     "로그아웃 후 다시 로그인해 보세요. 이메일은 같은 주소와 비밀번호를 사용하세요. 소셜 로그인은 이 기기에 닉네임을 저장합니다.",
   faq3q: "모바일과 데스크톱에서 플레이할 수 있나요?",
   faq3a:
-    "네 — GuessMyOrigin은 데스크톱과 모바일 브라우저에서 실행됩니다. 사이트를 열고 가입한 뒤 솔로 또는 친구와 플레이하세요.",
+    "네, GuessMyOrigin은 데스크톱과 모바일 브라우저에서 실행됩니다. 사이트를 열고 가입한 뒤 솔로 또는 친구와 플레이하세요.",
   faq4q: "어떤 언어를 지원하나요?",
   faq4a:
-    "상단 언어 메뉴에서 언제든 전환 — 한국어, English, Français 등.",
+    "상단 언어 메뉴에서 언제든 전환, 한국어, English, Français 등.",
   faq5q: "모드의 차이는?",
   faq5a:
     "스탠다드는 사진을 유지합니다. 하드코어는 얼굴을 잠깐만 보여줍니다. 랜덤은 매 라운드 타이머가 바뀝니다.",
@@ -1691,7 +1704,7 @@ const ko: Dict = {
   faq6a:
     "학교·회사·이벤트는 조직용 그룹 세션을 사용하거나, 맞춤 설정은 문의해 주세요.",
   modeStandard: "스탠다드",
-  modeStandardDesc: "오른쪽 위 사진 — 확대 & 줌",
+  modeStandardDesc: "오른쪽 위 사진, 확대 & 줌",
   modeHardcore: "하드코어",
   modeHardcoreDesc: "얼굴이 잠깐만 나타납니다",
   modeRandom: "랜덤",
@@ -1751,7 +1764,7 @@ export function modeLabels(t: Dict, mode: GameMode): { title: string; desc: stri
 const SERVER_ERRORS: Record<LangCode, Record<string, string>> = {
   en: {
     ROOM_NOT_FOUND: "Room not found",
-    SOLO_NO_JOIN: "Solo game — cannot join",
+    SOLO_NO_JOIN: "Solo game, cannot join",
     ALREADY_STARTED: "Game already started",
     ROOM_FULL: "Room full (max 10)",
     HOST_ONLY_SETTINGS: "Only the host can change settings",
@@ -1766,7 +1779,7 @@ const SERVER_ERRORS: Record<LangCode, Record<string, string>> = {
   },
   fr: {
     ROOM_NOT_FOUND: "Salon introuvable",
-    SOLO_NO_JOIN: "Partie solo — impossible de rejoindre",
+    SOLO_NO_JOIN: "Partie solo, impossible de rejoindre",
     ALREADY_STARTED: "Partie déjà commencée",
     ROOM_FULL: "Salon plein (max 10)",
     HOST_ONLY_SETTINGS: "Seul l'hôte peut changer les réglages",
@@ -1781,7 +1794,7 @@ const SERVER_ERRORS: Record<LangCode, Record<string, string>> = {
   },
   de: {
     ROOM_NOT_FOUND: "Raum nicht gefunden",
-    SOLO_NO_JOIN: "Solo-Spiel — Beitritt unmöglich",
+    SOLO_NO_JOIN: "Solo-Spiel, Beitritt unmöglich",
     ALREADY_STARTED: "Spiel bereits gestartet",
     ROOM_FULL: "Raum voll (max. 10)",
     HOST_ONLY_SETTINGS: "Nur der Host kann Einstellungen ändern",
@@ -1795,7 +1808,7 @@ const SERVER_ERRORS: Record<LangCode, Record<string, string>> = {
   },
   es: {
     ROOM_NOT_FOUND: "Sala no encontrada",
-    SOLO_NO_JOIN: "Partida solo — no se puede unir",
+    SOLO_NO_JOIN: "Partida solo, no se puede unir",
     ALREADY_STARTED: "Partida ya empezada",
     ROOM_FULL: "Sala llena (máx. 10)",
     HOST_ONLY_SETTINGS: "Solo el anfitrión puede cambiar ajustes",
@@ -1809,7 +1822,7 @@ const SERVER_ERRORS: Record<LangCode, Record<string, string>> = {
   },
   it: {
     ROOM_NOT_FOUND: "Stanza non trovata",
-    SOLO_NO_JOIN: "Partita solo — impossibile entrare",
+    SOLO_NO_JOIN: "Partita solo, impossibile entrare",
     ALREADY_STARTED: "Partita già iniziata",
     ROOM_FULL: "Stanza piena (max 10)",
     HOST_ONLY_SETTINGS: "Solo l'host può cambiare impostazioni",
@@ -1823,7 +1836,7 @@ const SERVER_ERRORS: Record<LangCode, Record<string, string>> = {
   },
   sv: {
     ROOM_NOT_FOUND: "Rummet hittades inte",
-    SOLO_NO_JOIN: "Solospel — kan inte gå med",
+    SOLO_NO_JOIN: "Solospel, kan inte gå med",
     ALREADY_STARTED: "Spelet har redan startat",
     ROOM_FULL: "Rummet fullt (max 10)",
     HOST_ONLY_SETTINGS: "Bara värden kan ändra inställningar",
@@ -1837,7 +1850,7 @@ const SERVER_ERRORS: Record<LangCode, Record<string, string>> = {
   },
   nl: {
     ROOM_NOT_FOUND: "Kamer niet gevonden",
-    SOLO_NO_JOIN: "Solospel — meedoen onmogelijk",
+    SOLO_NO_JOIN: "Solospel, meedoen onmogelijk",
     ALREADY_STARTED: "Spel al gestart",
     ROOM_FULL: "Kamer vol (max 10)",
     HOST_ONLY_SETTINGS: "Alleen de host kan instellingen wijzigen",
@@ -1851,7 +1864,7 @@ const SERVER_ERRORS: Record<LangCode, Record<string, string>> = {
   },
   pt: {
     ROOM_NOT_FOUND: "Sala não encontrada",
-    SOLO_NO_JOIN: "Jogo solo — impossível entrar",
+    SOLO_NO_JOIN: "Jogo solo, impossível entrar",
     ALREADY_STARTED: "Jogo já começou",
     ROOM_FULL: "Sala cheia (máx. 10)",
     HOST_ONLY_SETTINGS: "Só o anfitrião pode mudar definições",
@@ -1865,7 +1878,7 @@ const SERVER_ERRORS: Record<LangCode, Record<string, string>> = {
   },
   tr: {
     ROOM_NOT_FOUND: "Oda bulunamadı",
-    SOLO_NO_JOIN: "Solo oyun — katılınamaz",
+    SOLO_NO_JOIN: "Solo oyun, katılınamaz",
     ALREADY_STARTED: "Oyun zaten başladı",
     ROOM_FULL: "Oda dolu (maks. 10)",
     HOST_ONLY_SETTINGS: "Ayarları yalnızca ev sahibi değiştirebilir",
@@ -1879,7 +1892,7 @@ const SERVER_ERRORS: Record<LangCode, Record<string, string>> = {
   },
   ja: {
     ROOM_NOT_FOUND: "ルームが見つかりません",
-    SOLO_NO_JOIN: "ソロ試合 — 参加できません",
+    SOLO_NO_JOIN: "ソロ試合, 参加できません",
     ALREADY_STARTED: "試合はすでに開始済み",
     ROOM_FULL: "ルーム満員（最大10）",
     HOST_ONLY_SETTINGS: "設定変更はホストのみ",
@@ -1893,7 +1906,7 @@ const SERVER_ERRORS: Record<LangCode, Record<string, string>> = {
   },
   pl: {
     ROOM_NOT_FOUND: "Nie znaleziono pokoju",
-    SOLO_NO_JOIN: "Gra solo — nie można dołączyć",
+    SOLO_NO_JOIN: "Gra solo, nie można dołączyć",
     ALREADY_STARTED: "Gra już rozpoczęta",
     ROOM_FULL: "Pokój pełny (maks. 10)",
     HOST_ONLY_SETTINGS: "Tylko host może zmieniać ustawienia",
@@ -1907,7 +1920,7 @@ const SERVER_ERRORS: Record<LangCode, Record<string, string>> = {
   },
   ko: {
     ROOM_NOT_FOUND: "방을 찾을 수 없습니다",
-    SOLO_NO_JOIN: "솔로 게임 — 참가 불가",
+    SOLO_NO_JOIN: "솔로 게임, 참가 불가",
     ALREADY_STARTED: "게임이 이미 시작됨",
     ROOM_FULL: "방이 가득 참 (최대 10)",
     HOST_ONLY_SETTINGS: "호스트만 설정을 변경할 수 있습니다",

@@ -13,7 +13,6 @@ export default function LandingFooter() {
     { label: t.footerWho, href: "#about" },
     { label: t.footerWhat, href: "#what" },
     { label: t.footerOrgs, href: "#orgs" },
-    { label: t.footerModes, href: "#modes" },
     { label: t.footerPlay, href: "#play" },
   ];
 
